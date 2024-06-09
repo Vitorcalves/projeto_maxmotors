@@ -26,7 +26,7 @@ senha varchar(255) not null
 create table pessoa(
 id int auto_increment primary key,
 idPessoa varchar(40) unique not null,
-email varchar(255) unique,
+email varchar(255),
 tipo boolean,
 idEndereco int
 );
