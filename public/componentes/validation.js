@@ -33,7 +33,8 @@ function validateForm(form, validations) {
         }
         break;
       case 'required':
-        if (!input.value) {
+        if (!input.value.trim()) {
+          input.value = '';
           invalidFeedback(input, 'Campo obrigatório!');
           isValid = false;
           return;
