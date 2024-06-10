@@ -38,7 +38,7 @@ function validateForm(form, validations) {
           isValid = false;
           return;
         }
-        return;
+        break;
       case 'integer':
         if (!Number.isInteger(Number(input.value))) {
           invalidFeedback(input, 'Deve ser um número inteiro!');
@@ -86,27 +86,28 @@ function validFeedback(input) {
 }
 
 function validateCpf(cpf) {
-  if (cpf.length !== 14) {
-    return false;
-  }
+  if (cpf.length !== 14) return false;
 
   const cpfNumbers = cpf.match(/\d/g).join('');
-  if (cpfNumbers.length !== 11) {
-    return false;
+  if (cpfNumbers.length !== 11) return false;
+
+  if (/^(\d)\1+$/.test(cpfNumbers)) return false;
+
+  const cpfBase = cpfNumbers.slice(0, 9);
+  const cpfDigits = cpfNumbers.slice(9);
+
+  function calculateDigit(base, position) {
+    let total = base.split('').reduce((acc, num, idx) => {
+      return acc + Number(num) * (position - idx);
+    }, 0);
+    const remainder = (total * 10) % 11;
+    return remainder === 10 ? 0 : remainder;
   }
 
-  const [cpfSemDigito, digito] = cpfNumbers.match(/(\d{9})(\d{2})/).slice(1);
-  const cpfSemDigitoArray = cpfSemDigito.split('').map(Number);
+  const firstDigit = calculateDigit(cpfBase, 10);
+  const secondDigit = calculateDigit(cpfBase + firstDigit, 11);
 
-  const firstDigit = cpfSemDigitoArray.reduce((total, value, index) => {
-    return total + value * (10 - index);
-  }, 0) * 10 % 11;
-
-  const secondDigit = cpfSemDigitoArray.reduce((total, value, index) => {
-    return total + value * (11 - index);
-  }, 0) * 10 % 11;
-
-  return firstDigit === Number(digito[0]) && secondDigit === Number(digito[1]);
+  return firstDigit === Number(cpfDigits[0]) && secondDigit === Number(cpfDigits[1]);
 }
 
 function validateEmail(email) {
@@ -118,25 +119,29 @@ function validatePhone(phone) {
 }
 
 function validateCnpj(cnpj) {
-  if (cnpj.length !== 18) {
-    return false;
-  }
+  if (cnpj.length !== 18) return false;
 
+  // Extrai somente os números
   const cnpjNumbers = cnpj.match(/\d/g).join('');
-  if (cnpjNumbers.length !== 14) {
-    return false;
+  if (cnpjNumbers.length !== 14) return false;
+
+  // Separa base e dígitos verificadores
+  const cnpjBase = cnpjNumbers.slice(0, 12);
+  const cnpjDigits = cnpjNumbers.slice(12);
+
+  // Função para calcular cada dígito
+  function calculateDigit(base, pos) {
+    const weights = pos === 1 ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2] : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const sum = base.split('').reduce((total, value, index) => {
+      return total + (value * weights[index]);
+    }, 0);
+    const remainder = sum % 11;
+    return remainder < 2 ? 0 : 11 - remainder;
   }
 
-  const [cnpjSemDigito, digito] = cnpjNumbers.match(/(\d{12})(\d{2})/).slice(1);
-  const cnpjSemDigitoArray = cnpjSemDigito.split('').map(Number);
+  // Verifica os dígitos
+  const calculatedFirstDigit = calculateDigit(cnpjBase, 1);
+  const calculatedSecondDigit = calculateDigit(cnpjBase + calculatedFirstDigit, 2);
 
-  const firstDigit = cnpjSemDigitoArray.reduce((total, value, index) => {
-    return total + value * (5 - index % 4);
-  }, 0) % 11;
-
-  const secondDigit = cnpjSemDigitoArray.reduce((total, value, index) => {
-    return total + value * (6 - index % 5);
-  }, 0) % 11;
-
-  return firstDigit === Number(digito[0]) && secondDigit === Number(digito[1]);
+  return calculatedFirstDigit === Number(cnpjDigits[0]) && calculatedSecondDigit === Number(cnpjDigits[1]);
 }
