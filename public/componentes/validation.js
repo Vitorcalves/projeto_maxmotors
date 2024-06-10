@@ -53,6 +53,13 @@ function validateForm(form, validations) {
           return;
         }
         break;
+      case 'notZero':
+        if (input.value === '0') {
+          invalidFeedback(input, 'Deve ser diferente de zero!');
+          isValid = false;
+          return;
+        }
+        break;
       // Adicione mais casos conforme necessário
       default:
         console.error(`Tipo de validação '${type}' não suportado.`);
@@ -107,7 +114,7 @@ function validateEmail(email) {
 }
 
 function validatePhone(phone) {
-  return /^(\d{2})\s(\d{4,5}-\d{4})$/.test(phone);
+  return /^\(\d{2}\)\s(\d{4,5}-\d{4})$/.test(phone);
 }
 
 function validateCnpj(cnpj) {
