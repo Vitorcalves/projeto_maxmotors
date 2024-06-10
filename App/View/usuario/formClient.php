@@ -56,7 +56,7 @@ use App\Library\Session;
         <div class="col-md-2">
           <label for="tipo" class="form-label">Tipo</label>
           <select id="tipo" name="tipo" class="form-select">
-            <option selected>Selecione...</option>
+            <option value="0" selected>Selecione...</option>
             <option value="1">Pessoa Física</option>
             <option value="2">Pessoa Jurídica</option>
           </select>
@@ -117,14 +117,53 @@ use App\Library\Session;
     var form = document.getElementById('formCadastro');
     var telefoneInput = form.elements['telefone'];
     const validations = [{
-        field: 'telefone',
-        type: 'telefone'
+        field: 'nome',
+        type: 'required'
       },
       {
         field: 'email',
         type: 'email'
       },
-      // Adicione mais campos e tipos conforme necessário
+      {
+        field: 'telefone',
+        type: 'telefone'
+      },
+      {
+        field: 'tipo',
+        type: 'notZero'
+      },
+      {
+        field: 'cpf',
+        type: 'cpf'
+      },
+      {
+        field: 'cnpj',
+        type: 'cnpj'
+      },
+      {
+        field: 'cep',
+        type: 'required'
+      },
+      {
+        field: 'Estados',
+        type: 'notZero'
+      },
+      {
+        field: 'Cidades',
+        type: 'notZero'
+      },
+      {
+        field: 'logradouro',
+        type: 'required'
+      },
+      {
+        field: 'bairro',
+        type: 'required'
+      },
+      {
+        field: 'numero_casa',
+        type: 'required'
+      },
     ];
 
     const formIsValid = validateForm(form, validations);
@@ -233,7 +272,7 @@ use App\Library\Session;
     selectMunicipio.select = {
       name: "Cidades",
       options: [{
-        idCidade: 111111,
+        idCidade: 0,
         nome: 'Selecione um estado'
       }],
       idField: 'idCidade',
