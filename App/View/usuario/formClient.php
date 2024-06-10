@@ -309,4 +309,6 @@ use App\Library\Session;
 
   VMasker(document.querySelector("#cep")).maskPattern("99999-999");
   VMasker(document.querySelector("#telefone")).maskPattern("(99) 99999-9999");
+  VMasker(document.querySelector("#cpf")).maskPattern("999.999.999-99");
+  VMasker(document.querySelector("#cnpj")).maskPattern("99.999.999/9999-99");
 </script>
