@@ -13,15 +13,15 @@ class Produto extends ControllerMain
      *
      * @param array $dados 
      */
-    public function __construct($dados)
-    {
-        $this->auxiliarConstruct($dados);
+    // public function __construct($dados)
+    // {
+    //     $this->auxiliarConstruct($dados);
 
-        // Somente pode ser acessado por usuários adminsitradores
-        if (!$this->getAdministrador()) {
-            return Redirect::page("Home");
-        }
-    }
+    //     // Somente pode ser acessado por usuários adminsitradores
+    //     if (!$this->getAdministrador()) {
+    //         return Redirect::page("Home");
+    //     }
+    // }
 
     /**
      * index
@@ -30,7 +30,35 @@ class Produto extends ControllerMain
      */
     public function index()
     {
-        $this->loadView("restrita/listaProduto", $this->model->lista("descricao"));
+        $menu = [
+            [
+                'nome' => 'Home',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Carros',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Venda',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Clientes',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Usuários',
+                'url' => "#",
+                'ativo' => true
+            ],
+        ];
+
+        $this->loadView("usuario/formCadastroCarros", [$menu], false);
     }
 
     /**
