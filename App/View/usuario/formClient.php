@@ -20,7 +20,7 @@ use App\Library\Session;
   <script src="<?= baseUrl() ?>assets/vanilla-masker/lib/vanilla-masker.js"></script>
   <script src="<?= baseUrl() ?>assets/bootstrap/js/bootstrap.js"></script>
   <script src="<?= baseUrl() ?>componentes/componentes.js" defer></script>
-  <script src="<?= baseUrl() ?>componentes/validation.js" defer></script>
+  <script src="<?= baseUrl() ?>componentes/funcoes.js" defer></script>
   <title>Max Motors</title>
 
   <style>
@@ -112,6 +112,7 @@ use App\Library\Session;
 
 
   document.getElementById('btnCadastrar').addEventListener('click', function(e) {
+    console.log(funcoes.generateUUID());
     e.preventDefault(); // Evita o comportamento padrão do formulário
 
     var form = document.getElementById('formCadastro');
@@ -166,7 +167,7 @@ use App\Library\Session;
       },
     ];
 
-    const formIsValid = validateForm(form, validations);
+    const formIsValid = validation.validar(form, validations);
 
     if (!formIsValid) {
       return;
@@ -179,25 +180,26 @@ use App\Library\Session;
       object[key] = value;
     });
     console.log(object);
-    // var json = JSON.stringify(object);
+    object['id'] = funcoes.generateUUID();
+    var json = JSON.stringify(object);
 
     // // Enviar os dados
-    // fetch('<?= baseUrl() ?>usuario/cadastrar', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: json
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     console.log('Sucesso:', data);
-    //     showToast('Cadastro realizado com sucesso!', 'success');
-    // })
-    // .catch((error) => {
-    //     console.error('Erro:', error);
-    //     showToast('Erro no cadastro!', 'danger');
-    // });
+    fetch('<?= baseUrl() ?>usuario/insert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: json
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Sucesso:', data);
+        funcoes.showToast('Cadastro realizado com sucesso!', 'success');
+      })
+      .catch((error) => {
+        console.error('Erro:', error);
+        funcoes.showToast('Erro no cadastro!', 'danger');
+      });
   });
 
   function enviarCep() {
@@ -222,17 +224,17 @@ use App\Library\Session;
       })
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
-        showToast('Cep não encontrado', 'danger');
+        funcoes.showToast('Cep não encontrado', 'danger');
       });
   }
 
   function showToast(message, type) {
-    const toast = document.createElement('comp-toast'); // Cria uma nova instância
+    const toast = document.createElement('comp-toast');
     toast.toast = {
       message: message,
       type: type
     };
-    document.body.appendChild(toast); // Anexa o novo toast ao body cada vez
+    document.body.appendChild(toast);
   }
 
   function atualizarDadosCep(data) {
