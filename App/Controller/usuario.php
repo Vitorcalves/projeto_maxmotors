@@ -59,18 +59,20 @@ class Usuario extends ControllerMain
      */
     public function buscar()
     {
-        $cep = $this->recebeJson()['cep'];
-        if (empty($cep)) {
-            return $this->toJson(['error' => 'CEP não fornecido'], 400);
-        }
-        $enderecoModel = $this->loadModel("Endereco");
+        try {
 
-        $dadosBusca = $enderecoModel->buscaCep($cep);
+            $cep = $this->recebeJson();
+            $enderecoModel = $this->loadModel("Endereco");
 
-        if ($dadosBusca) {
-            return $this->toJson($dadosBusca);
-        } else {
-            return $this->toJson(['error' => 'Endereço não encontrado para o CEP fornecido'], 404);
+            $dadosBusca = $enderecoModel->buscaCep($cep);
+
+            if ($dadosBusca) {
+                return $this->toJson($dadosBusca);
+            } else {
+                return $this->toJson(['error' => 'Endereço não encontrado para o CEP fornecido'], 404);
+            }
+        } catch (\Throwable $th) {
+            return $this->toJson($th, 400);
         }
     }
 
@@ -119,25 +121,10 @@ class Usuario extends ControllerMain
      */
     public function insert()
     {
-        $post = $this->getPost();
+        $post = $this->recebeJson();
 
         // Valida dados recebidos do formulário
-        if (Validator::make($post, $this->model->validationRules)) {
-            return Redirect::page("Usuario/form/insert");
-        } else {
-
-            if ($this->model->insert([
-                "statusRegistro"    => $post['statusRegistro'],
-                "nivel"             => $post['nivel'],
-                "nome"              => $post['nome'],
-                "email"             => $post['email'],
-                "senha"             => password_hash($post['senha'], PASSWORD_DEFAULT)
-            ])) {
-                return Redirect::page("Usuario", ["msgSuccess" => "Usuário inserido com sucesso !"]);
-            } else {
-                return Redirect::page("Usuario", ["msgError" => "Falha na inserção dos dados do Usuário !"]);
-            }
-        }
+        $this->model->criarCliente($post);
     }
 
 
