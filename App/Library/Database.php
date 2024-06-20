@@ -80,31 +80,33 @@ class Database
 
     public  function connect()
     {
-        if ($this->conexao === null) {
-            try {
+        try {
+            if ($this->getDBDrive() == 'mysql') {            // MySQL
 
-                if ($this->getDBDrive() == 'mysql') {            // MySQL
-                    $dsn = $this->getDBDrive() . ":host=" . $this->getHost() . ";port=" . $this->getPort() . ";dbname=" . $this->getDB();
-                    $this->conexao = new PDO($dsn, $this->getUser(), $this->getPassword());
-                    $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                } else if ($this->getDBDrive() == 'sqlsrv') {    // SQL Server
+                $this->conexao = new PDO(
+                    $this->getDBDrive() . ":host=" . $this->getHost() . ";port=" . $this->getPort() . ";dbname=" . $this->getDB(),
+                    $this->getUser(),
+                    $this->getPassword(),
+                    [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]
+                );
+            } else if ($this->getDBDrive() == 'sqlsrv') {    // SQL Server
 
-                    $this->conexao = new PDO(
-                        $this->getDBDrive() . ":Server=" . $this->getHost() . "," . $this->getPort() . ";DataBase=" . $this->getDB(),
-                        $this->getUser(),
-                        $this->getPassword(),
-                        [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]
-                    );
-                }
-            } catch (PDOException $e) {
-                //se houver exceçao, exibe
-                die("Erro: <code>" . $e->getMessage() . "</code>");
+                $this->conexao = new PDO(
+                    $this->getDBDrive() . ":Server=" . $this->getHost() . "," . $this->getPort() . ";DataBase=" . $this->getDB(),
+                    $this->getUser(),
+                    $this->getPassword(),
+                    [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]
+                );
             }
+
+            $this->conexao->setAttribute(PDO::ATTR_ERRMODE, $this->conexao::ERRMODE_EXCEPTION);
+        } catch (PDOException $i) {
+            //se houver exceçao, exibe
+            die("Erro: <code>" . $i->getMessage() . "</code>");
         }
 
-        return $this->conexao;
+        return ($this->conexao);
     }
-
 
     private function disconnect()
     {
@@ -152,6 +154,28 @@ class Database
      * @param array $campos 
      * @return void
      */
+    public function insertTransactional($table, $campos = [])
+    {
+        try {
+            $save = $this->getCampos($campos);
+            $fields = implode("` , `", array_keys($campos));
+            $values = implode(" , ", array_keys($save['dados']));
+
+            $sql = 'INSERT INTO `' . $table . '` (`' . $fields . '`) VALUES (' . $values . ')';
+
+            // Assume que a conexão e a transação são gerenciadas externamente
+            if ($this->conexao === null) {
+                throw new Exception("Nenhuma conexão ativa encontrada.");
+            }
+
+            $query = $this->conexao->prepare($sql);
+            $query->execute($save['dados']);
+
+            return true;
+        } catch (Exception $exc) {
+            throw new Exception("Erro ao inserir registro em transação: " . $exc->getMessage());
+        }
+    }
     public function insert($table, $campos = [])
     {
         try {
@@ -177,12 +201,45 @@ class Database
         return $rs;
     }
 
+    public function beginTransaction()
+    {
+        try {
+            $this->connect();
+            $this->conexao->beginTransaction();
+        } catch (PDOException $e) {
+            // Handle exception or log error
+            throw new Exception("Erro ao iniciar a transação: " . $e->getMessage());
+        }
+    }
+
+    public function commit()
+    {
+        try {
+            $this->conexao->commit();
+        } catch (PDOException $e) {
+            // Handle exception or log error
+            throw new Exception("Erro ao confirmar a transação: " . $e->getMessage());
+        }
+    }
+
+    public function rollBack()
+    {
+        try {
+            $this->conexao->rollBack();
+        } catch (PDOException $e) {
+            // Handle exception or log error
+            throw new Exception("Erro ao reverter a transação: " . $e->getMessage());
+        }
+    }
+
+
+
     public function update($table, $conditions, $campos)
     {
         try {
 
             $save           = $this->getCampos($campos);
-            $condWhere      = $this->getCampos($conditions);
+            $condWhere      = $this->getCampos($conditions, " AND ");
             $save['save']   = array_merge($save['dados'], $condWhere['dados']);
 
             $sql = "UPDATE `" . $table . "` SET " . $save['sql'] . " WHERE " . $condWhere['sql'] . "; ";
@@ -294,6 +351,7 @@ class Database
 
         $query = $this->connect()->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         $rscDados = $query->execute($where['save']);
+
         if ($tipo == "first") {
             return $this->dbBuscaArray($query);
         } elseif ($tipo == "all") {
@@ -318,6 +376,8 @@ class Database
         $query = $this->connect()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
         $query->execute($params);
         $rs = $query;
+
+        self::__destruct();
 
         return $rs;
     }
