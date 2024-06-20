@@ -217,7 +217,7 @@ class UsuarioModel extends ModelMain
         return $this->db->insertTransactional('juridica', [
             "idPessoa" => $data['id'],
             "cnpj" => $data['cnpj'],
-            "nome" => $data['nome'],
+            "rasaoSocial" => $data['nome'],
         ]);
     }
 

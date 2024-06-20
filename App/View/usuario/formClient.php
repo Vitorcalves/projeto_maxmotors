@@ -69,10 +69,7 @@ use App\Library\Session;
           <label for="cnpj" class="form-label">CNPJ</label>
           <input type="text" class="form-control" name="cnpj" id="cnpj">
         </div>
-        <div class="col-md-3">
-          <label for="inscricao_estadual" class="form-label">Inscrição Estadual</label>
-          <input type="text" class="form-control" name="inscricao_estadual" id="inscricao_estadual">
-        </div>
+
         <div class="col-2">
           <label for="cep" class="form-label">CEP</label>
           <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP">
@@ -134,14 +131,6 @@ use App\Library\Session;
         type: 'notZero'
       },
       {
-        field: 'cpf',
-        type: 'cpf'
-      },
-      {
-        field: 'cnpj',
-        type: 'cnpj'
-      },
-      {
         field: 'cep',
         type: 'required'
       },
@@ -166,6 +155,17 @@ use App\Library\Session;
         type: 'required'
       },
     ];
+    if (form.elements['tipo'].value == '1') {
+      validations.push({
+        field: 'cpf',
+        type: 'cpf'
+      });
+    } else if (form.elements['tipo'].value == '2') {
+      validations.push({
+        field: 'cnpj',
+        type: 'cnpj'
+      });
+    }
 
     const formIsValid = validation.validar(form, validations);
 
@@ -257,6 +257,9 @@ use App\Library\Session;
     const cabecario = document.querySelector("cabecario-pagina");
     const selectEstado = document.querySelectorAll("comp-select")[0];
     const selectMunicipio = document.querySelectorAll("comp-select")[1];
+    const cpfInput = document.getElementById('cpf');
+    const cnpjInput = document.getElementById('cnpj');
+    const tipoSelect = document.getElementById('tipo');
 
     cabecario.menus = data.menu;
 
@@ -305,6 +308,25 @@ use App\Library\Session;
         })
         .catch(error => console.error('Erro ao buscar cidades:', error));
     }
+
+    function toggleFields() {
+      var tipo = tipoSelect.value;
+      if (tipo == '1') { // Pessoa Física
+        cpfInput.disabled = false;
+        cnpjInput.disabled = true;
+        cnpjInput.value = ''; // Limpa o valor
+      } else if (tipo == '2') { // Pessoa Jurídica
+        cpfInput.disabled = true;
+        cnpjInput.disabled = false;
+        cpfInput.value = ''; // Limpa o valor
+      } else {
+        cpfInput.disabled = false;
+        cnpjInput.disabled = false;
+      }
+    }
+
+    tipoSelect.addEventListener('change', toggleFields);
+    toggleFields();
 
 
   });
