@@ -139,7 +139,6 @@ class UsuarioModel extends ModelMain
 
     public function buscaCep($cep)
     {
-        var_dump($cep);
         $rsc = $this->db->dbSelect("
             SELECT 
                 c.logradouro, 
@@ -188,14 +187,16 @@ class UsuarioModel extends ModelMain
             $this->db->commit();
             return true;
         } catch (Exception $e) {
+
             $this->db->rollBack();
-            return false;
+            error_log($e);
+            throw $e;
         }
     }
 
     private function inserirPessoa($data)
     {
-        return $this->db->insert('pessoa', [
+        return $this->db->insertTransactional('pessoa', [
             "id" => $data['id'],
             "email" => $data['email'],
             "tipo" => 1,
@@ -204,7 +205,7 @@ class UsuarioModel extends ModelMain
 
     private function inserirFisica($data)
     {
-        return $this->db->insert('fisica', [
+        return $this->db->insertTransactional('fisica', [
             "idPessoa" => $data['id'],
             "cpf" => $data['cpf'],
             "nome" => $data['nome'],
@@ -213,7 +214,7 @@ class UsuarioModel extends ModelMain
 
     private function inserirJuridica($data)
     {
-        return $this->db->insert('juridica', [
+        return $this->db->insertTransactional('juridica', [
             "idPessoa" => $data['id'],
             "cnpj" => $data['cnpj'],
             "nome" => $data['nome'],
@@ -222,7 +223,7 @@ class UsuarioModel extends ModelMain
 
     private function inserirEndereco($data)
     {
-        return $this->db->insert('endereco', [
+        return $this->db->insertTransactional('endereco', [
             "cep" => $data['cep'],
             "logradouro" => $data['logradouro'],
             "numero" => $data['numero_casa'],

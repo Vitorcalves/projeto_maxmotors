@@ -121,10 +121,14 @@ class Usuario extends ControllerMain
      */
     public function insert()
     {
-        $post = $this->recebeJson();
+        try {
+            $post = $this->recebeJson();
 
-        // Valida dados recebidos do formulário
-        $this->model->criarCliente($post);
+            // Valida dados recebidos do formulário
+            return $this->model->criarCliente($post);
+        } catch (\Throwable $th) {
+            return $this->toJson($th, 400);
+        }
     }
 
 
