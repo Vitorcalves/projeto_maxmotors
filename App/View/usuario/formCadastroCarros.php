@@ -1,6 +1,8 @@
 <?php
 
 use App\Library\Session;
+use App\Library\Formulario;
+use App\
 
 ?>
 
@@ -41,31 +43,32 @@ use App\Library\Session;
         <div class="container">
             <form class="row g-3">
                 <div class="col-md-10">
-                    <label for="descricao" class="form-label">Descrição</label>
-                    <input type="text" class="form-control" id="desrcicao">
+                    <label for="modelo" class="form-label">Modelo</label>
+                    <input type="text" class="form-control" id="modelo" name="modelo">
                 </div>
                 <div class="col-md-2">
-                    <label for="modelo" class="form-label">Modelo</label>
-                    <input type="text" class="form-control" id="modelo">
+                    <label for="cor" class="form-label">Cor</label>
+                    <input type="text" class="form-control" id="cor" name="cor">
                 </div>
                 <div class="col-2">
                     <label for="ano" class="form-label">Ano</label>
                     <input type="text" class="form-control" id="ano">
                 </div>
-                <div class="col-2">
-                    <label for="cor" class="form-label">Cor</label>
-                    <input type="text" class="form-control" id="cor">
-                </div>
                 <div class="col-md-4">
-                  <label for="marca" class="form-label">Marca</label>
-                  <select id="marca" class="form-select">
-                    <option selected>Choose...</option>
-                    <option>...</option>
-                  </select>
+                    <comp-select></comp-select>
                 </div>
                 <div class="col-md-4">
                     <label for="preco" class="form-label">Preço</label>
                     <input type="text" class="form-control" id="preco">
+                </div>
+                <div class="col-md-2">
+                    <label for="quantidade" class="form-label">Quantidade</label>
+                    <input type="text" class="form-control" id="quantidade" name="quantidade">
+                </div>
+                <div class="col-md-2">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea></textarea>
+                    <!-- <input type="text" class="form-control" id="descricao" name="descricao"> -->
                 </div>
                 <div class="col-md-4">
                     <label for="imagem" class="form-label">Selecione uma imagem</label>
@@ -77,5 +80,25 @@ use App\Library\Session;
             </form>
         </div>
     </main>
-    <rodape-pagina></rodape-pagina>
   </body>
+
+  <script>
+     const data = <?php echo json_encode($dados); ?>;
+
+    VMasker(document.querySelector("#ano")).maskPattern("9999");
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const selectMarca = document.querySelector("comp-select");
+
+        selectMarca.select = {
+        name: "Marca",
+        options: data.marca,
+        idField: 'id',
+        textField: 'marca',
+        extra: {
+            id: 0,
+            name: 'Selecione uma marca'
+        }
+        };
+    })
+  </script>

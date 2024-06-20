@@ -30,6 +30,10 @@ class Produto extends ControllerMain
      */
     public function index()
     {
+        $produtoModel =  $this->loadModel("Produto");
+        $marca = $produtoModel->getMarcaCombobox();
+        var_dump($marca);
+
         $menu = [
             [
                 'nome' => 'Home',
@@ -58,7 +62,7 @@ class Produto extends ControllerMain
             ],
         ];
 
-        $this->loadView("usuario/formCadastroCarros", [$menu], false);
+        $this->loadView("usuario/formCadastroCarros", ['menu' => $menu, 'marca' => $marca], false);
     }
 
     /**

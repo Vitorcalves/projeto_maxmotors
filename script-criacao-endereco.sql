@@ -24,3 +24,10 @@ ADD CONSTRAINT idEstado FOREIGN KEY (idEstado) REFERENCES estados(idEstado);
 
 alter table cep
 add constraint idMunicipio foreign key(idMunicipio) references municipios(idMunicipio);
+
+ALTER TABLE produto RENAME COLUMN nome TO modelo;
+
+alter table produto add ano year;
+
+ALTER TABLE `max_motors`.`produto` 
+CHANGE COLUMN `ano` `ano` YEAR NOT NULL ;
