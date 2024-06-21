@@ -43,36 +43,36 @@ use App\Library\Session;
       <form id="formCadastro" class="row g-3 needs-validation" novalidate>
         <div class="col-md-10">
           <label for="nome" class="form-label">Nome</label>
-          <input type="text" name="nome" class="form-control" id="nome" required>
+          <input type="text" name="nome" value="<?= setSubValor(['usuario', 'nome']) ?>" class="form-control" id="nome" required>
         </div>
         <div class="col-md-2">
           <label for="email" class="form-label">Email</label>
-          <input type="email" name="email" class="form-control" id="modelo">
+          <input type="email" name="email" value="<?= setSubValor(['usuario', 'email']) ?>" class="form-control" id="modelo">
         </div>
         <div class="col-md-2">
           <label for="telefone" class="form-label">Telefone</label>
-          <input type="text" class="form-control" name="telefone" id="telefone" required>
+          <input type="text" class="form-control" value="<?= setSubValor(['usuario', 'telefone']) ?>" name="telefone" id="telefone" required>
         </div>
         <div class="col-md-2">
           <label for="tipo" class="form-label">Tipo</label>
           <select id="tipo" name="tipo" class="form-select">
-            <option value="0" selected>Selecione...</option>
-            <option value="1">Pessoa Física</option>
-            <option value="2">Pessoa Jurídica</option>
+            <option value="0" <?= setSubValor(['usuario', 'tipo']) == ""   ? "selected" : ""  ?>>Selecione...</option>
+            <option value="1" <?= setSubValor(['usuario', 'tipo']) == "1"   ? "selected" : ""  ?>>Pessoa Física</option>
+            <option value="2" <?= setSubValor(['usuario', 'tipo']) == "2"   ? "selected" : ""  ?>>Pessoa Jurídica</option>
           </select>
         </div>
         <div class="col-md-2">
           <label for="cpf" class="form-label">CPF</label>
-          <input type="text" class="form-control" name="cpf" id="cpf">
+          <input type="text" value="<?= setSubValor(['usuario', 'cpf']) ?>" class=" form-control" name="cpf" id="cpf">
         </div>
         <div class="col-md-3">
           <label for="cnpj" class="form-label">CNPJ</label>
-          <input type="text" class="form-control" name="cnpj" id="cnpj">
+          <input type="text" value="<?= setSubValor(['usuario', 'cnpj']) ?>" class=" form-control" name="cnpj" id="cnpj">
         </div>
 
         <div class="col-2">
           <label for="cep" class="form-label">CEP</label>
-          <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP">
+          <input type="text" value="<?= setSubValor(['usuario', 'cep']) ?>" class=" form-control" name="cep" id="cep" placeholder="CEP">
         </div>
         <div class="col-1">
           <button type="button" class="btn btn-secondary" onclick="enviarCep()">Buscar</button>
@@ -85,15 +85,15 @@ use App\Library\Session;
         </div>
         <div class="col-md-4">
           <label for="bairro" class="form-label">Bairro</label>
-          <input type="text" class="form-control" name="bairro" id="bairro">
+          <input type="text" value="<?= setSubValor(['usuario', 'bairro']) ?>" class=" form-control" name="bairro" id="bairro">
         </div>
         <div class="col-md-4">
           <label for="logradouro" class="form-label">Rua</label>
-          <input type="text" class="form-control" name="logradouro" id="logradouro">
+          <input type="text" value="<?= setSubValor(['usuario', 'logradouro']) ?>" class=" form-control" name="logradouro" id="logradouro">
         </div>
         <div class="col-md-2">
           <label for="numero" class="form-label">Número da Casa</label>
-          <input type="text" class="form-control" name="numero_casa" id="numero">
+          <input type="text" value="<?= setSubValor(['usuario', 'numero']) ?>" class=" form-control" name="numero_casa" id="numero">
         </div>
         <div class="col-12">
           <button id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
@@ -105,15 +105,15 @@ use App\Library\Session;
 </html>
 <script>
   const data = <?php echo json_encode($dados); ?>;
+  var id = '';
+  console.log(data);
 
 
 
   document.getElementById('btnCadastrar').addEventListener('click', function(e) {
-    console.log(funcoes.generateUUID());
-    e.preventDefault(); // Evita o comportamento padrão do formulário
+    e.preventDefault();
 
-    var form = document.getElementById('formCadastro');
-    var telefoneInput = form.elements['telefone'];
+    const form = document.getElementById('formCadastro');
     const validations = [{
         field: 'nome',
         type: 'required'
@@ -180,7 +180,7 @@ use App\Library\Session;
       object[key] = value;
     });
     console.log(object);
-    object['id'] = funcoes.generateUUID();
+    object['id'] = id || funcoes.generateUUID();
     var json = JSON.stringify(object);
 
     // // Enviar os dados
@@ -273,16 +273,28 @@ use App\Library\Session;
         name: 'Selecione um estado'
       }
     };
-
-    selectMunicipio.select = {
-      name: "Cidades",
-      options: [{
-        idCidade: 0,
-        nome: 'Selecione um estado'
-      }],
-      idField: 'idCidade',
-      textField: 'nome'
-    };
+    if (data.usuario) {
+      selectMunicipio.select = {
+        name: "Cidades",
+        options: data.dados_municipio,
+        idField: 'idMunicipio',
+        textField: 'nome'
+      };
+      selectEstado.querySelector(`select option[value="${data.usuario.estado}"]`).selected = true;
+      selectMunicipio.querySelector(`select option[value="${data.usuario.municipio}"]`).selected = true;
+      tipoSelect.disabled = true;
+      id = data.usuario.id;
+    } else {
+      selectMunicipio.select = {
+        name: "Cidades",
+        options: [{
+          idCidade: 0,
+          nome: 'Selecione um estado'
+        }],
+        idField: 'idCidade',
+        textField: 'nome'
+      };
+    }
 
     selectEstado.addEventListener('change', (event) => {
       const idEstado = event.target.value;
@@ -298,7 +310,7 @@ use App\Library\Session;
           selectMunicipio.select = {
             name: "Cidades",
             options: cidades,
-            idField: 'idCidade',
+            idField: 'idMunicipio',
             textField: 'nome',
             extra: {
               id: 0,
@@ -323,6 +335,23 @@ use App\Library\Session;
         cpfInput.disabled = false;
         cnpjInput.disabled = false;
       }
+    }
+
+    function preencherFormulario(dados) {
+      // Define os valores dos inputs
+      selectEstado.value = dados.estado || '0';
+      selectMunicipio.value = dados.municipio || '0';
+      cpfInput.value = dados.cpf || '';
+      cnpjInput.value = dados.cnpj || '';
+      tipoSelect.value = dados.tipo || '0';
+      document.getElementById('nome').value = dados.nome || '';
+      document.getElementById('email').value = dados.email || '';
+      document.getElementById('telefone').value = dados.telefone || ''; // Certifique-se de adicionar o telefone ao objeto se necessário
+      document.getElementById('cep').value = dados.cep || '';
+      document.getElementById('bairro').value = dados.bairro || '';
+      document.getElementById('logradouro').value = dados.logradouro || '';
+      document.getElementById('numero').value = dados.numero || '';
+      // Campos adicionais podem ser preenchidos aqui da mesma maneira
     }
 
     tipoSelect.addEventListener('change', toggleFields);

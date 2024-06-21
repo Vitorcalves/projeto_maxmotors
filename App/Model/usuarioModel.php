@@ -5,7 +5,7 @@ use App\Library\Session;
 
 class UsuarioModel extends ModelMain
 {
-    public $table = "usuario";
+    public $table = "pessoa";
 
     public $validationRules = [
         "idPessoa" => [],
@@ -158,6 +158,43 @@ class UsuarioModel extends ModelMain
             return $this->db->dbBuscaArrayAll($rsc[0]);
         } else {
             return [];
+        }
+    }
+
+    public function getCliente($id)
+    {
+        $sql = "SELECT 
+                    p.id, 
+                    p.email, 
+                    p.tipo, 
+                    f.cpf, 
+                    f.nome, 
+                    j.cnpj, 
+                    j.rasaoSocial, 
+                    e.cep, 
+                    e.logradouro, 
+                    e.numero, 
+                    e.complemento, 
+                    e.municipio, 
+                    e.estado, 
+                    e.bairro 
+                FROM 
+                    pessoa AS p
+                LEFT JOIN 
+                    fisica AS f ON f.idPessoa = p.id
+                LEFT JOIN 
+                    juridica AS j ON j.idPessoa = p.id
+                LEFT JOIN 
+                    endereco AS e ON e.idPessoa = p.id
+                WHERE 
+                    p.id = ?";
+
+        $rs = $this->db->dbSelect($sql, [$id]);
+
+        if ($this->db->dbNumeroLinhas($rs) > 0) {
+            return $this->db->dbBuscaArrayAll($rs)[0];
+        } else {
+            return null;
         }
     }
 

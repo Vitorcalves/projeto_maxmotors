@@ -52,6 +52,48 @@ class Usuario extends ControllerMain
         $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados], false);
     }
 
+    // public function edit()
+    // {
+    //     $enderecoModel = $this->loadModel("Endereco");
+    //     $estados = $enderecoModel->getEstados();
+    //     $usuario = $this->model->getCliente($getId);
+
+    //     $menu = [
+    //         [
+    //             'nome' => 'Home',
+    //             'url' => "#",
+    //             'ativo' => false
+    //         ],
+    //         [
+    //             'nome' => 'Carros',
+    //             'url' => "#",
+    //             'ativo' => false
+    //         ],
+    //         [
+    //             'nome' => 'Venda',
+    //             'url' => "#",
+    //             'ativo' => false
+    //         ],
+    //         [
+    //             'nome' => 'Clientes',
+    //             'url' => "#",
+    //             'ativo' => false
+    //         ],
+    //         [
+    //             'nome' => 'Usuários',
+    //             'url' => "#",
+    //             'ativo' => true
+    //         ],
+    //     ];
+
+
+
+
+
+
+    //     $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados, 'usuario' => $usuario], false);
+    // }
+
     /**
      * lista
      *
@@ -104,14 +146,47 @@ class Usuario extends ControllerMain
      */
     public function form()
     {
-        $dbDados = [];
+        $enderecoModel = $this->loadModel("Endereco");
+        $estados = $enderecoModel->getEstados();
+        $usuario = null;
+        $municipios = null;
+        $menu = [
+            [
+                'nome' => 'Home',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Carros',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Venda',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Clientes',
+                'url' => "#",
+                'ativo' => false
+            ],
+            [
+                'nome' => 'Usuários',
+                'url' => "#",
+                'ativo' => true
+            ],
+        ];
+
+
 
         if ($this->getAcao() != 'new') {
             // buscar o usuário pelo $id no banco de dados
-            $dbDados = $this->model->getById($this->getId());
+            $getId = $this->getId();
+            $usuario = $this->model->getCliente($getId);
+            $municipios = $enderecoModel->getMunicipios($usuario['estado']);
         }
-
-        $this->loadView('usuario/formUsuario', $dbDados);
+        $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados, 'usuario' => $usuario, 'dados_municipio' => $municipios], false);
     }
 
     /**
