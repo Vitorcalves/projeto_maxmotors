@@ -207,7 +207,7 @@ class ControllerMain
 	 *
 	 * @param array $dados 
 	 * @param int $status 
-	 * @return void
+	 * @return array
 	 */
 	public function recebeJson()
 	{

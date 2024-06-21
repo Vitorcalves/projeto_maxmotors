@@ -5,8 +5,13 @@ use App\Library\Session;
 
 class EnderecoModel extends ModelMain
 {
-  public function buscaCep($cep)
+  public function buscaCep($data)
   {
+    if (!isset($data['cep'])) {
+      throw new Exception('CEP invalido. Por favor, forneça um CEP válido.', 400);
+    }
+    $cep = $data['cep'];
+
     $rsc = $this->db->dbSelect("
             SELECT 
                 c.logradouro, 
@@ -33,7 +38,7 @@ class EnderecoModel extends ModelMain
         'dados_municipio' => $dataMunicipio
       ];
     } else {
-      return [];
+      throw new Exception('CEP não encontrado. Por favor, forneça um CEP válido.', 404);;
     }
   }
 

@@ -2,7 +2,7 @@
 
 namespace App\Library;
 
-class Validator 
+class Validator
 {
     public static function make(array $data, array $rules)
     {
@@ -18,54 +18,54 @@ class Validator
 
                 switch ($items[0]) {
 
-                    case 'required' :
+                    case 'required':
 
                         if (($data[$ruleKey] == "") || (empty($data[$ruleKey]))) {
-                            $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> deve ser preenchido.";
+                            $errors[$ruleKey] = "O campo {$ruleValue['label']} deve ser preenchido.";
                         }
                         break;
 
-                    case 'email' :
+                    case 'email':
 
-                        if (!filter_var($data[$ruleKey],FILTER_VALIDATE_EMAIL)){
-                            $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> não é válido.";
-                        }
-
-                        break;
-
-                    case 'float' :
-
-                        if (!filter_var($data[$ruleKey],FILTER_VALIDATE_FLOAT)){
-                            $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> deve conter número decimal.";
+                        if (!filter_var($data[$ruleKey], FILTER_VALIDATE_EMAIL)) {
+                            $errors[$ruleKey] = "O campo {$ruleValue['label']} não é válido.";
                         }
 
                         break;
 
-                    case 'int' :
+                    case 'float':
 
-                        if (!filter_var($data[$ruleKey],FILTER_VALIDATE_INT)){
-                            $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> deve conter número inteiro.";
+                        if (!filter_var($data[$ruleKey], FILTER_VALIDATE_FLOAT)) {
+                            $errors[$ruleKey] = "O campo {$ruleValue['label']} deve conter número decimal.";
                         }
 
                         break;
 
-                    case "min" :                    
-                        
-                        if (strlen(strip_tags($data[$ruleKey])) < $items[ 1 ] ){
-                            $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> dever conter um mínimo " . $items[ 1 ] . " caracteres.";
+                    case 'int':
+
+                        if (!filter_var($data[$ruleKey], FILTER_VALIDATE_INT)) {
+                            $errors[$ruleKey] = "O campo {$ruleValue['label']} deve conter número inteiro.";
                         }
 
                         break;
-                    
-                    case 'max' :
-            
-                        if (strlen(strip_tags($data[$ruleKey])) > $items[ 1 ] ){
-                            $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> dever conter um maximo " . $items[ 1 ] . " caracteres.";
+
+                    case "min":
+
+                        if (strlen(strip_tags($data[$ruleKey])) < $items[1]) {
+                            $errors[$ruleKey] = "O campo {$ruleValue['label']} dever conter um mínimo " . $items[1] . " caracteres.";
                         }
 
                         break;
-                        
-                    default :
+
+                    case 'max':
+
+                        if (strlen(strip_tags($data[$ruleKey])) > $items[1]) {
+                            $errors[$ruleKey] = "O campo {$ruleValue['label']} dever conter um maximo " . $items[1] . " caracteres.";
+                        }
+
+                        break;
+
+                    default:
                         break;
                 }
             }

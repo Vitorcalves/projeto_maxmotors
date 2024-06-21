@@ -146,6 +146,30 @@ idProduto int not null
 alter table imagem
 add CONSTRAINT fk_produto_imagem
 FOREIGN KEY (idProduto) REFERENCES produto(id);
+
+alter table endereco
+add bairro varchar(70);
+
+alter table endereco
+add idPessoa varchar(40);
+
+DROP CONSTRAINT fk_pessoa_endereco;
+alter table pessoa
+
+alter table endereco
+add CONSTRAINT fk_pessoa_endereco
+FOREIGN KEY (idPessoa) REFERENCES pessoa(idPessoa);
+
+alter table pessoa
+DROP COLUMN idEndereco;
+
+ALTER TABLE `maxMotors`.`pessoa` 
+DROP COLUMN `id`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`idPessoa`);
+
+ALTER TABLE `maxMotors`.`pessoa` 
+CHANGE COLUMN `idPessoa` `id` VARCHAR(40) NOT NULL ;
  
 -- Exportação de dados foi desmarcado.
 
