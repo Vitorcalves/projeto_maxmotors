@@ -37,7 +37,7 @@ function formataValor($valor, $decimais = 2)
  * @param string $valor 
  * @return float
  */
-function strNumber($valor) 
+function strNumber($valor)
 {
     return str_replace(",", ".", str_replace(".", "", $valor));
 }
@@ -56,4 +56,16 @@ function setValor($campo, $default = "")
     } else {
         return $default;
     }
+}
+
+function setSubValor($campo, $default = "")
+{
+    $dado = $_POST;
+    foreach ($campo as $value) {
+        if (!isset($dado[$value])) {
+            return $default;
+        }
+        $dado = $dado[$value];
+    }
+    return $dado;
 }
