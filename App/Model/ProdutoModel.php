@@ -67,4 +67,18 @@ Class ProdutoModel extends ModelMain
             return [];
         }
     }
+
+    public function getMarcaCombobox()
+    {
+        $this->table = "marca";
+        $rsc = $this->db->dbSelect("SELECT id, nome 
+                                    FROM {$this->table}
+                                  ");
+
+        if ($this->db->dbNumeroLinhas($rsc) > 0) {
+            return $this->db->dbBuscaArrayAll($rsc);
+        } else {
+            return [];
+        }
+    }
 }
