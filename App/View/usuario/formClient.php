@@ -278,7 +278,7 @@ use App\Library\Session;
       name: "Cidades",
       options: [{
         idCidade: 0,
-        nome: 'Selecione um estado'
+        nome: 'Selecione um município'
       }],
       idField: 'idCidade',
       textField: 'nome'

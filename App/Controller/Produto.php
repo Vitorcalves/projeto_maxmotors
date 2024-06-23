@@ -30,7 +30,7 @@ class Produto extends ControllerMain
      */
     public function index()
     {
-        $produtoModel =  $this->loadModel("Produto");
+        $produtoModel =  $this->loadModel("produto");
         $marca = $produtoModel->getMarcaCombobox();
         var_dump($marca);
 
@@ -38,22 +38,22 @@ class Produto extends ControllerMain
             [
                 'nome' => 'Home',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Carros',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Venda',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Clientes',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Usuários',
@@ -62,7 +62,7 @@ class Produto extends ControllerMain
             ],
         ];
 
-        $this->loadView("usuario/formCadastroCarros", ['menu' => $menu, 'marca' => $marca], false);
+        $this->loadView("restrita/formProduto", ['menu' => $menu, 'marca' => $marca], false);
     }
 
     /**
@@ -99,7 +99,7 @@ class Produto extends ControllerMain
 
         if (Validator::make($post, $this->model->validationRules)) {
             // error
-            return Redirect::page("Produto/form/insert");
+            return Redirect::page("produto/form/insert");
         } else {
 
             if (!empty($_FILES['imagem']['name'])) {
@@ -118,22 +118,20 @@ class Produto extends ControllerMain
             }
 
             if ($this->model->insert([
+                "modelo"            => $post['modelo'],
                 "descricao"         => $post['descricao'],
-                "caracteristicas"   => $post['caracteristicas'],
-                "statusRegistro"    => $post['statusRegistro'],
-                "categoria_id"      => $post['categoria_id'],
-                "saldoEmEstoque"    => strNumber($post['saldoEmEstoque']),
-                "precoVenda"        => strNumber($post['precoVenda']),
-                "precoPromocao"     => strNumber($post['precoPromocao']),
-                "custoTotal"        => strNumber($post['custoTotal']),
+                "cor"               => $post['cor'],
+                "marca"             => $post['idMarca'],
+                "preco"             => strNumber($post['preco']),
+                "quantidade"        => strNumber($post['quantidade']),
                 'imagem'            => $nomeRetornado
             ])) {
-                Session::set("msgSuccess", "Produto adicionada com sucesso.");
+                Session::set("msgSuccess", "Produto adicionado com sucesso.");
             } else {
-                Session::set("msgError", "Falha tentar inserir uma nova Produto.");
+                Session::set("msgError", "Falha tentar inserir um novo Produto.");
             }
     
-            Redirect::page("Produto");
+            Redirect::page("produto");
         }
     }
 
