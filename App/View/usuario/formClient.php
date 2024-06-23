@@ -96,7 +96,7 @@ use App\Library\Session;
           <input type="text" class="form-control" name="numero_casa" id="numero">
         </div>
         <div class="col-12">
-          <button id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
+          <button id="btnCadastrar" class="btn btn-primary" type="submit">Cadastrar</button>
         </div>
       </form>
     </div>

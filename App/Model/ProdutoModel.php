@@ -11,18 +11,18 @@ Class produtoModel extends ModelMain
             'label' => 'Modelo',
             'rules' => 'required|min:3|max:50'
         ],
-        'Descrição' => [
+        'descricao' => [
             'label' => 'Descrição',
-            'rules' => 'required|min:5'
+            'rules' => 'required|min:1'
         // ],
         // 'categoria_id' => [
         //     'label' => 'Categoria',
         //     'rules' => 'required|int'
         ],
-        'statusRegistro' => [
-            'label' => 'Status',
-            'rules' => 'required|int'
-        ]
+        // 'statusRegistro' => [
+        //     'label' => 'Status',
+        //     'rules' => 'required|int'
+        // ]
     ];
 
     /**

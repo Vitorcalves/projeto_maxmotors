@@ -22,6 +22,10 @@
   <script src="<?= baseUrl() ?>assets/bootstrap/js/bootstrap.js"></script>
   <script src="<?= baseUrl() ?>componentes/componentes.js" defer></script>
   <script src="<?= baseUrl() ?>componentes/validation.js" defer></script>
+  
+  <script type="text/javascript" src="<?= baseUrl() ?>assets/DataTables/datatables.min.js"></script>
+
+  <?= Formulario::titulo("produtos") ?>
   <title>Max Motors</title>
 
   <style>
@@ -36,29 +40,17 @@
   <theme-toggle></theme-toggle>
   <cabecario-pagina></cabecario-pagina>
   <div>
-    <div class="card" style="width: 18rem;">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+    <?php foreach ($aDados as $value) : ?>
+      <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="..."><?= $value['id'] ?></img>
+        <div class="card-body">
+          <h5 class="card-title"><?= $value['nome'] ?></h5>
+          <p class="card-text"><?= $value['nome'] ?></p>
+          <p class="card-text"><?= $value['nome'] ?></p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
       </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
+    <?php endforeach; ?>
   </div>
+  <?= Formulario::getDataTables('listaProdutos'); ?>
 </body>

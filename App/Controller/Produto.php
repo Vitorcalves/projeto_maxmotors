@@ -32,7 +32,6 @@ class Produto extends ControllerMain
     {
         $produtoModel =  $this->loadModel("produto");
         $marca = $produtoModel->getMarcaCombobox();
-        var_dump($marca);
 
         $menu = [
             [
@@ -105,7 +104,7 @@ class Produto extends ControllerMain
             if (!empty($_FILES['imagem']['name'])) {
 
                 // Faz uploado da imagem
-                $nomeRetornado = UploadImages::upload($_FILES, 'produto');
+                $nomeRetornado = UploadImages::upload($_FILES, 'imagem');
 
                 // se for boolean, significa que o upload falhou
                 if (is_bool($nomeRetornado)) {
@@ -114,17 +113,17 @@ class Produto extends ControllerMain
                 }
 
             } else {
-                $nomeRetornado = $post['nomeImagem'];
+                $nomeRetornado = $post['imagem'];
             }
 
             if ($this->model->insert([
                 "modelo"            => $post['modelo'],
                 "descricao"         => $post['descricao'],
                 "cor"               => $post['cor'],
-                "marca"             => $post['idMarca'],
+                "marca"             => $post['id'],
                 "preco"             => strNumber($post['preco']),
                 "quantidade"        => strNumber($post['quantidade']),
-                'imagem'            => $nomeRetornado
+                "imagem"            => $nomeRetornado
             ])) {
                 Session::set("msgSuccess", "Produto adicionado com sucesso.");
             } else {

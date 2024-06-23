@@ -55,7 +55,7 @@ use App\Library\Session;
                             <input type="password" class="form-control" id="senha" name="senha" required />
                         </div>
                         <button type="submit" class="btn btn-primary">Entrar</button>
-                        <a href="#" class="btn btn-link">Esqueci a senha</a>
+                        <a href="telaInicial" class="btn btn-link">Esqueci a senha</a>
                     </form>
                 </div>
             </div>
