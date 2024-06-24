@@ -4,105 +4,71 @@ use App\Library\Session;
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br" data-bs-theme="dark">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="<?= baseUrl() ?>assets/bootstrap/css/bootstrap.min.css">
-
-  <link rel="stylesheet" href="<?= baseUrl() ?>assets/vendors/fontawesome/css/all.min.css">
-  <script src="<?= baseUrl() ?>assets/@popperjs/core/dist/umd/popper.min.js"></script>
-  <script src="<?= baseUrl() ?>assets/js/jquery-3.3.1.js"></script>
-  <script src="<?= baseUrl() ?>assets/vanilla-masker/lib/vanilla-masker.js"></script>
-  <script src="<?= baseUrl() ?>assets/bootstrap/js/bootstrap.js"></script>
-  <script src="<?= baseUrl() ?>componentes/componentes.js" defer></script>
-  <script src="<?= baseUrl() ?>componentes/funcoes.js" defer></script>
-  <title>Max Motors</title>
-
-  <style>
-    .nome-empresa {
-      font-family: "Uni Sans Heavy", sans-serif;
-      text-transform: uppercase;
-    }
-  </style>
-</head>
-
-<body>
-  <theme-toggle></theme-toggle>
-  <cabecario-pagina></cabecario-pagina>
-  <comp-toast></comp-toast>
-  <main class="flex-shrink-0">
-    <div class="container">
-      <h1 class="mt-5"><strong>Cadastro</strong></h1>
+<div class="container">
+  <h1 class="mt-5"><strong>Cadastro</strong></h1>
+</div>
+<div class="container">
+  <form id="formCadastro" class="row g-3 needs-validation" novalidate>
+    <div class="col-md-10">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" name="nome" value="<?= setSubValor(['usuario', 'nome']) ?>" class="form-control" id="nome" required>
     </div>
-    <div class="container">
-      <form id="formCadastro" class="row g-3 needs-validation" novalidate>
-        <div class="col-md-10">
-          <label for="nome" class="form-label">Nome</label>
-          <input type="text" name="nome" value="<?= setSubValor(['usuario', 'nome']) ?>" class="form-control" id="nome" required>
-        </div>
-        <div class="col-md-2">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" name="email" value="<?= setSubValor(['usuario', 'email']) ?>" class="form-control" id="modelo">
-        </div>
-        <div class="col-md-2">
-          <label for="telefone" class="form-label">Telefone</label>
-          <input type="text" class="form-control" value="<?= setSubValor(['usuario', 'telefone']) ?>" name="telefone" id="telefone" required>
-        </div>
-        <div class="col-md-2">
-          <label for="tipo" class="form-label">Tipo</label>
-          <select id="tipo" name="tipo" class="form-select">
-            <option value="0" <?= setSubValor(['usuario', 'tipo']) == ""   ? "selected" : ""  ?>>Selecione...</option>
-            <option value="1" <?= setSubValor(['usuario', 'tipo']) == "1"   ? "selected" : ""  ?>>Pessoa Física</option>
-            <option value="2" <?= setSubValor(['usuario', 'tipo']) == "2"   ? "selected" : ""  ?>>Pessoa Jurídica</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label for="cpf" class="form-label">CPF</label>
-          <input type="text" value="<?= setSubValor(['usuario', 'cpf']) ?>" class=" form-control" name="cpf" id="cpf">
-        </div>
-        <div class="col-md-3">
-          <label for="cnpj" class="form-label">CNPJ</label>
-          <input type="text" value="<?= setSubValor(['usuario', 'cnpj']) ?>" class=" form-control" name="cnpj" id="cnpj">
-        </div>
-
-        <div class="col-2">
-          <label for="cep" class="form-label">CEP</label>
-          <input type="text" value="<?= setSubValor(['usuario', 'cep']) ?>" class=" form-control" name="cep" id="cep" placeholder="CEP">
-        </div>
-        <div class="col-1">
-          <button type="button" class="btn btn-secondary" onclick="enviarCep()">Buscar</button>
-        </div>
-        <div class="col-2">
-          <comp-select></comp-select>
-        </div>
-        <div class="col-md-2">
-          <comp-select></comp-select>
-        </div>
-        <div class="col-md-4">
-          <label for="bairro" class="form-label">Bairro</label>
-          <input type="text" value="<?= setSubValor(['usuario', 'bairro']) ?>" class=" form-control" name="bairro" id="bairro">
-        </div>
-        <div class="col-md-4">
-          <label for="logradouro" class="form-label">Rua</label>
-          <input type="text" value="<?= setSubValor(['usuario', 'logradouro']) ?>" class=" form-control" name="logradouro" id="logradouro">
-        </div>
-        <div class="col-md-2">
-          <label for="numero" class="form-label">Número da Casa</label>
-          <input type="text" value="<?= setSubValor(['usuario', 'numero']) ?>" class=" form-control" name="numero_casa" id="numero">
-        </div>
-        <div class="col-12">
-          <button id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
-        </div>
-      </form>
+    <div class="col-md-2">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" name="email" value="<?= setSubValor(['usuario', 'email']) ?>" class="form-control" id="modelo">
     </div>
-</body>
+    <div class="col-md-2">
+      <label for="telefone" class="form-label">Telefone</label>
+      <input type="text" class="form-control" value="<?= setSubValor(['usuario', 'telefone']) ?>" name="telefone" id="telefone" required>
+    </div>
+    <div class="col-md-2">
+      <label for="tipo" class="form-label">Tipo</label>
+      <select id="tipo" name="tipo" class="form-select">
+        <option value="0" <?= setSubValor(['usuario', 'cpf']) == "" and setSubValor(['usuario', 'cnpj']) == "" ? "selected" : ""  ?>>Selecione...</option>
+        <option value="1" <?= setSubValor(['usuario', 'cpf']) != ""   ? "selected" : ""  ?>>Pessoa Física</option>
+        <option value="2" <?= setSubValor(['usuario', 'cnpj']) != ""   ? "selected" : ""  ?>>Pessoa Jurídica</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="cpf" class="form-label">CPF</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'cpf']) ?>" class=" form-control" name="cpf" id="cpf">
+    </div>
+    <div class="col-md-3">
+      <label for="cnpj" class="form-label">CNPJ</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'cnpj']) ?>" class=" form-control" name="cnpj" id="cnpj">
+    </div>
 
-</html>
+    <div class="col-2">
+      <label for="cep" class="form-label">CEP</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'cep']) ?>" class=" form-control" name="cep" id="cep" placeholder="CEP">
+    </div>
+    <div class="col-1">
+      <button type="button" class="btn btn-secondary" onclick="enviarCep()">Buscar</button>
+    </div>
+    <div class="col-2">
+      <comp-select></comp-select>
+    </div>
+    <div class="col-md-2">
+      <comp-select></comp-select>
+    </div>
+    <div class="col-md-4">
+      <label for="bairro" class="form-label">Bairro</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'bairro']) ?>" class=" form-control" name="bairro" id="bairro">
+    </div>
+    <div class="col-md-4">
+      <label for="logradouro" class="form-label">Rua</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'logradouro']) ?>" class=" form-control" name="logradouro" id="logradouro">
+    </div>
+    <div class="col-md-2">
+      <label for="numero" class="form-label">Número da Casa</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'numero']) ?>" class=" form-control" name="numero_casa" id="numero">
+    </div>
+    <div class="col-12">
+      <button id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
+    </div>
+  </form>
+</div>
+
 <script>
   const data = <?php echo json_encode($dados); ?>;
   var id = '';
@@ -184,7 +150,7 @@ use App\Library\Session;
     var json = JSON.stringify(object);
 
     // // Enviar os dados
-    fetch('<?= baseUrl() ?>usuario/insert', {
+    fetch('<?= baseUrl() ?>cliente/insert', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -254,14 +220,11 @@ use App\Library\Session;
 
   document.addEventListener("DOMContentLoaded", () => {
     const btnBuscarCep = document.getElementById('btnBuscarCep');
-    const cabecario = document.querySelector("cabecario-pagina");
     const selectEstado = document.querySelectorAll("comp-select")[0];
     const selectMunicipio = document.querySelectorAll("comp-select")[1];
     const cpfInput = document.getElementById('cpf');
     const cnpjInput = document.getElementById('cnpj');
     const tipoSelect = document.getElementById('tipo');
-
-    cabecario.menus = data.menu;
 
     selectEstado.select = {
       name: "Estados",

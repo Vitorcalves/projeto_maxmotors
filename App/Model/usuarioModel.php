@@ -5,7 +5,7 @@ use App\Library\Session;
 
 class UsuarioModel extends ModelMain
 {
-    public $table = "pessoa";
+    public $table = "user";
 
     public $validationRules = [
         "idPessoa" => [],
@@ -24,14 +24,6 @@ class UsuarioModel extends ModelMain
         ],
         "cep"  => [
             "label" => 'CEP',
-            "rules" => 'required'
-        ],
-        "cnpj"  => [
-            "label" => 'CNPJ',
-            "rules" => 'required'
-        ],
-        "cpf"  => [
-            "label" => 'CPF',
             "rules" => 'required'
         ],
         "logradouro"  => [
@@ -164,13 +156,11 @@ class UsuarioModel extends ModelMain
     public function getCliente($id)
     {
         $sql = "SELECT 
-                    p.id, 
-                    p.email, 
-                    p.tipo, 
-                    f.cpf, 
-                    f.nome, 
-                    j.cnpj, 
-                    j.rasaoSocial, 
+                    u.id, 
+                    u.email, 
+                    u.cpf, 
+                    u.nome, 
+                    u.cnpj, 
                     e.cep, 
                     e.logradouro, 
                     e.numero, 
@@ -179,13 +169,9 @@ class UsuarioModel extends ModelMain
                     e.estado, 
                     e.bairro 
                 FROM 
-                    pessoa AS p
+                    user AS u
                 LEFT JOIN 
-                    fisica AS f ON f.idPessoa = p.id
-                LEFT JOIN 
-                    juridica AS j ON j.idPessoa = p.id
-                LEFT JOIN 
-                    endereco AS e ON e.idPessoa = p.id
+                    endereco AS e ON e.idPessoa = u.id
                 WHERE 
                     p.id = ?";
 
@@ -203,9 +189,6 @@ class UsuarioModel extends ModelMain
         $this->db->beginTransaction();
 
         try {
-            if (!$this->inserirPessoa($data)) {
-                throw new Exception('Erro ao inserir pessoa');
-            }
 
             if ($data['tipo'] == 1) {
                 if (!$this->inserirFisica($data)) {
@@ -231,30 +214,23 @@ class UsuarioModel extends ModelMain
         }
     }
 
-    private function inserirPessoa($data)
-    {
-        return $this->db->insertTransactional('pessoa', [
-            "id" => $data['id'],
-            "email" => $data['email'],
-            "tipo" => 1,
-        ]);
-    }
-
     private function inserirFisica($data)
     {
         return $this->db->insertTransactional('fisica', [
-            "idPessoa" => $data['id'],
-            "cpf" => $data['cpf'],
+            "id" => $data['id'],
+            "email" => $data['email'],
             "nome" => $data['nome'],
+            "cpf" => $data['cpf'],
         ]);
     }
 
     private function inserirJuridica($data)
     {
         return $this->db->insertTransactional('juridica', [
-            "idPessoa" => $data['id'],
+            "id" => $data['id'],
+            "email" => $data['email'],
+            "nome" => $data['nome'],
             "cnpj" => $data['cnpj'],
-            "rasaoSocial" => $data['nome'],
         ]);
     }
 

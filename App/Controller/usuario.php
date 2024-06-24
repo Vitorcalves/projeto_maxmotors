@@ -18,8 +18,6 @@ class Usuario extends ControllerMain
         // if (!$this->getAdministrador()) {
         //     return Redirect::page("Home");
         // }
-        $enderecoModel = $this->loadModel("Endereco");
-        $estados = $enderecoModel->getEstados();
 
         $menu = [
             [
@@ -49,7 +47,7 @@ class Usuario extends ControllerMain
             ],
         ];
 
-        $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados], false);
+        $this->loadView("usuario/formClient", ['menu' => $menu], false);
     }
 
     // public function edit()

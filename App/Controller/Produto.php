@@ -32,7 +32,6 @@ class Produto extends ControllerMain
     {
         $produtoModel =  $this->loadModel("Produto");
         $marca = $produtoModel->getMarcaCombobox();
-        var_dump($marca);
 
         $menu = [
             [
@@ -109,10 +108,9 @@ class Produto extends ControllerMain
 
                 // se for boolean, significa que o upload falhou
                 if (is_bool($nomeRetornado)) {
-                    Session::set( 'inputs' , $post );
+                    Session::set('inputs', $post);
                     return Redirect::page("Produto/form/update/" . $post['id']);
                 }
-
             } else {
                 $nomeRetornado = $post['nomeImagem'];
             }
@@ -132,7 +130,7 @@ class Produto extends ControllerMain
             } else {
                 Session::set("msgError", "Falha tentar inserir uma nova Produto.");
             }
-    
+
             Redirect::page("Produto");
         }
     }
@@ -157,12 +155,11 @@ class Produto extends ControllerMain
 
                 // se for boolean, significa que o upload falhou
                 if (is_bool($nomeRetornado)) {
-                    Session::set( 'inputs' , $post );
+                    Session::set('inputs', $post);
                     return Redirect::page("Produto/form/update/" . $post['id']);
                 }
 
                 UploadImages::delete($post['nomeImagem'], 'produto');
-
             } else {
                 $nomeRetornado = $post['nomeImagem'];
             }
@@ -170,7 +167,7 @@ class Produto extends ControllerMain
             if ($this->model->update(
                 [
                     "id" => $post['id']
-                ], 
+                ],
                 [
                     "descricao"         => $post['descricao'],
                     "caracteristicas"   => $post['caracteristicas'],

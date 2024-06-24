@@ -505,4 +505,13 @@ class Database
 
         return $rowResX[$CampoRetorno];
     }
+
+    public function listNull($table, $field)
+    {
+        $sql = "SELECT * FROM " . $table . " WHERE " . $field . " IS NULL";
+        $query = $this->connect()->prepare($sql);
+        $query->execute();
+
+        return $this->dbBuscaArrayAll($query);
+    }
 }
