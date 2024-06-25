@@ -30,29 +30,29 @@ class Produto extends ControllerMain
      */
     public function index()
     {
-        $produtoModel =  $this->loadModel("Produto");
+        $produtoModel =  $this->loadModel("produto");
         $marca = $produtoModel->getMarcaCombobox();
 
         $menu = [
             [
                 'nome' => 'Home',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Carros',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Venda',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Clientes',
                 'url' => "#",
-                'ativo' => false
+                'ativo' => true
             ],
             [
                 'nome' => 'Usuários',
@@ -61,7 +61,7 @@ class Produto extends ControllerMain
             ],
         ];
 
-        $this->loadView("usuario/formCadastroCarros", ['menu' => $menu, 'marca' => $marca], false);
+        $this->loadView("restrita/formProduto", ['menu' => $menu, 'marca' => $marca], false);
     }
 
     /**
@@ -98,13 +98,13 @@ class Produto extends ControllerMain
 
         if (Validator::make($post, $this->model->validationRules)) {
             // error
-            return Redirect::page("Produto/form/insert");
+            return Redirect::page("produto/form/insert");
         } else {
 
             if (!empty($_FILES['imagem']['name'])) {
 
                 // Faz uploado da imagem
-                $nomeRetornado = UploadImages::upload($_FILES, 'produto');
+                $nomeRetornado = UploadImages::upload($_FILES, 'imagem');
 
                 // se for boolean, significa que o upload falhou
                 if (is_bool($nomeRetornado)) {
@@ -112,26 +112,24 @@ class Produto extends ControllerMain
                     return Redirect::page("Produto/form/update/" . $post['id']);
                 }
             } else {
-                $nomeRetornado = $post['nomeImagem'];
+                $nomeRetornado = $post['imagem'];
             }
 
             if ($this->model->insert([
+                "modelo"            => $post['modelo'],
                 "descricao"         => $post['descricao'],
-                "caracteristicas"   => $post['caracteristicas'],
-                "statusRegistro"    => $post['statusRegistro'],
-                "categoria_id"      => $post['categoria_id'],
-                "saldoEmEstoque"    => strNumber($post['saldoEmEstoque']),
-                "precoVenda"        => strNumber($post['precoVenda']),
-                "precoPromocao"     => strNumber($post['precoPromocao']),
-                "custoTotal"        => strNumber($post['custoTotal']),
-                'imagem'            => $nomeRetornado
+                "cor"               => $post['cor'],
+                "marca"             => $post['id'],
+                "preco"             => strNumber($post['preco']),
+                "quantidade"        => strNumber($post['quantidade']),
+                "imagem"            => $nomeRetornado
             ])) {
-                Session::set("msgSuccess", "Produto adicionada com sucesso.");
+                Session::set("msgSuccess", "Produto adicionado com sucesso.");
             } else {
-                Session::set("msgError", "Falha tentar inserir uma nova Produto.");
+                Session::set("msgError", "Falha tentar inserir um novo Produto.");
             }
 
-            Redirect::page("Produto");
+            Redirect::page("produto");
         }
     }
 

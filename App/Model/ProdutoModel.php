@@ -2,27 +2,27 @@
 
 use App\Library\ModelMain;
 
-Class ProdutoModel extends ModelMain
+Class produtoModel extends ModelMain
 {
     public $table = "produto";
 
     public $validationRules = [
-        'descricao' => [
-            'label' => 'Descrição',
+        'modelo' => [
+            'label' => 'Modelo',
             'rules' => 'required|min:3|max:50'
         ],
-        'caracteristicas' => [
-            'label' => 'Características',
-            'rules' => 'required|min:5'
+        'descricao' => [
+            'label' => 'Descrição',
+            'rules' => 'required|min:1'
+        // ],
+        // 'categoria_id' => [
+        //     'label' => 'Categoria',
+        //     'rules' => 'required|int'
         ],
-        'categoria_id' => [
-            'label' => 'Categoria',
-            'rules' => 'required|int'
-        ],
-        'statusRegistro' => [
-            'label' => 'Status',
-            'rules' => 'required|int'
-        ]
+        // 'statusRegistro' => [
+        //     'label' => 'Status',
+        //     'rules' => 'required|int'
+        // ]
     ];
 
     /**
