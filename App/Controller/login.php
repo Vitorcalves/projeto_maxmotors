@@ -6,11 +6,11 @@ use App\Library\Session;
 use App\Library\Email;
 use App\Library\Validator;
 
-class Login extends ControllerMain 
+class Login extends ControllerMain
 {
     public function signIn()
     {
-        $UsuarioModel = $this->loadModel("Usuario");
+        $UsuarioModel = $this->loadModel("usuario");
         $post = $this->getPost();
 
         // super usário
@@ -23,35 +23,38 @@ class Login extends ControllerMain
         // Buscar usuário na base de dados
 
         $aUsuario = $UsuarioModel->getUserEmail($post['email']);
+        var_dump($aUsuario);
 
-        if (count($aUsuario) > 0 ) {
+        if (count($aUsuario) > 0) {
 
             // validar a senha            
-            if (!password_verify(trim($post["senha"]), $aUsuario['senha']) ) {
-                Session::set("msgError", 'Usuário e ou senha inválido.');
+            if (!password_verify(trim($post["senha"]), $aUsuario['pasword'])) {
+                Session::set("msgError", 'Usuário e ou senha inválido11.');
                 return Redirect::page("home/login");
             }
-            
+
             // validar o status do usuário            
-            if ($aUsuario['statusRegistro'] == 2 ) {
+            if ($aUsuario['statusRegistro'] == 2) {
                 Session::set("msgError", "Usuário Inativo, não será possível prosseguir !");
+                var_dump('2');
                 return Redirect::page("home/login");
             }
 
             //  Criar flag's de usuário logado no sistema
-            
-            Session::set("usuarioId"   , $aUsuario['id']);
+
+            Session::set("usuarioId", $aUsuario['id']);
             Session::set("usuarioLogin", $aUsuario['nome']);
             Session::set("usuarioEmail", $aUsuario['email']);
             Session::set("usuarioNivel", $aUsuario['nivel']);
             Session::set("usuarioSenha", $aUsuario['senha']);
-            
+
             // Direcionar o usuário para página home
             return Redirect::page("home/homeAdmin");
             //
 
         } else {
-            Session::set('msgError', 'Usuário e ou senha inválido.');
+
+            Session::set('msgError', 'Usuário e ou senha inválido22.');
             return Redirect::page("home/login");
         }
     }
@@ -68,7 +71,7 @@ class Login extends ControllerMain
         Session::destroy('usuarioEmail');
         Session::destroy('usuarioNivel');
         Session::destroy('usuarioSenha');
-        
+
         return Redirect::Page("home");
     }
 
@@ -77,7 +80,7 @@ class Login extends ControllerMain
      *
      * @return void
      */
-    public function solicitaRecuperacaoSenha() 
+    public function solicitaRecuperacaoSenha()
     {
         return $this->loadView("usuario/formSolicitaRecuperacaoSenha");
     }
@@ -86,11 +89,11 @@ class Login extends ControllerMain
     *   Envia e-mail com link para recuperação da senha
     */
 
-    public function gerarLinkRecuperaSenha() 
+    public function gerarLinkRecuperaSenha()
     {
         $post           = $this->getPost();
         $usuarioModel   = $this->loadModel("Usuario");
-        
+
         $user           = $usuarioModel->getUserEmail($post['email']);
 
         if (!$user) {
@@ -98,7 +101,6 @@ class Login extends ControllerMain
             return Redirect::page("Login/solicitaRecuperacaoSenha", [
                 "msgError" => "Não foi possivel localizar o e-mail na base de dados !"
             ]);
-
         } else {
 
             $created_at = date('Y-m-d H:i:s');
@@ -107,7 +109,7 @@ class Login extends ControllerMain
 
             $corpoEmail = '
                 Você solicitou a recuperação de sua senha? <br><br>
-                Caso tenha solicitação clique no link a seguir para prosseguir <a href="'. $cLink . '" title="Recuperar a senha">Recuperar a senha</a> <br><br>
+                Caso tenha solicitação clique no link a seguir para prosseguir <a href="' . $cLink . '" title="Recuperar a senha">Recuperar a senha</a> <br><br>
                 Att: <br><br>
                 Equipe VelocityPHP
             ';
@@ -132,7 +134,7 @@ class Login extends ControllerMain
                 // Inserindo nova solicitação
 
                 $resIns = $usuarioRecuperaSenhaModel->insert([
-                    "usuario_id" => $user["id"], 
+                    "usuario_id" => $user["id"],
                     "chave" => $chave,
                     "created_at" => $created_at
                 ]);
@@ -140,19 +142,17 @@ class Login extends ControllerMain
                 if ($resIns) {
                     return Redirect::page("Home/Login", [
                         "msgSuccess" => "Link para recuperação da senha enviado com sucesso! Verifique seu e-mail."
-                    ]);   
+                    ]);
                 } else {
                     return Redirect::page("Login/solicitaRecuperacaoSenha", [
                         "msgError" => "Ocorreu uma falha ao resgistrar o link de recuperação da senha, favor descartar o e-mail recibido e solictar no link mais tarde."
-                    ]);   
+                    ]);
                 }
-
             } else {
 
                 return Redirect::page("Login/solicitaRecuperacaoSenha", [
                     "msgError" => "Não foi possivel enviar o e-mail, favor tentar mais tarde."
-                ]);      
-
+                ]);
             }
         }
     }
@@ -172,7 +172,7 @@ class Login extends ControllerMain
 
         if ($userChave) {
 
-            if (date("Y-m-d H:i:s") <= date("Y-m-d H:i:s" , strtotime("+1 hours" , strtotime($userChave['created_at'])))) {
+            if (date("Y-m-d H:i:s") <= date("Y-m-d H:i:s", strtotime("+1 hours", strtotime($userChave['created_at'])))) {
 
                 $usuarioModel = $this->loadModel('Usuario');
                 $user           = $usuarioModel->getById($userChave['usuario_id']);
@@ -203,9 +203,8 @@ class Login extends ControllerMain
 
                         return Redirect::page("Login/solicitaRecuperacaoSenha", [
                             "msgError" => "Chave de recuperação da senha inválida."
-                        ]); 
+                        ]);
                     }
-
                 } else {
 
                     // Desativa chave
@@ -213,10 +212,8 @@ class Login extends ControllerMain
 
                     return Redirect::page("Login/solicitaRecuperacaoSenha", [
                         "msgError" => "Chave de recuperação da senha inválida."
-                    ]); 
-
+                    ]);
                 }
-                
             } else {
 
                 // Desativa chave
@@ -224,22 +221,21 @@ class Login extends ControllerMain
 
                 return Redirect::page("Login/solicitaRecuperacaoSenha", [
                     "msgError" => "Chave de recuperação da senha inválida."
-                ]); 
+                ]);
             }
-
         } else {
             return Redirect::page("Login/solicitaRecuperacaoSenha", [
                 "msgError" => "Chave de recuperação da senha inválida (1)."
-            ]);             
+            ]);
         }
     }
 
-        /**
+    /**
      * atualizaRecuperaSenha - Atualiza recupera a senha do usuário
      *
      * @return void
      */
-    public function atualizaRecuperaSenha() 
+    public function atualizaRecuperaSenha()
     {
         $UsuarioModel = $this->loadModel("Usuario");
 
@@ -261,24 +257,21 @@ class Login extends ControllerMain
                     Session::destroy("msgError");
                     return Redirect::page("Home/Login", [
                         "msgSuccess"    => "Senha alterada com sucesso !"
-                    ]);  
-
+                    ]);
                 } else {
                     Session::set("msgError", "Falha na atualização da nova senha !");
-                    return $this->loadView("usuario/formRecuperaSenha"); 
+                    return $this->loadView("usuario/formRecuperaSenha");
                 }
-
             } else {
                 Session::set("msgErros", "Nova senha e conferência da senha estão divergentes !");
-                return $this->loadView("usuario/formRecuperaSenha");                   
+                return $this->loadView("usuario/formRecuperaSenha");
             }
-
         } else {
             Session::set("msgErros", "Usuário inválido !");
-            return $this->loadView("usuario/formRecuperaSenha"); 
+            return $this->loadView("usuario/formRecuperaSenha");
         }
     }
-    
+
     /**
      * novaContaVisitante
      *
@@ -289,7 +282,7 @@ class Login extends ControllerMain
         $post           = $this->getPost();
         $UsuarioModel   = $this->loadModel("Usuario");
 
-       // Valida dados recebidos do formulário
+        // Valida dados recebidos do formulário
         if (Validator::make($post, $UsuarioModel->validationRules)) {
             return Redirect::page("Home/criarConta");
         } else {

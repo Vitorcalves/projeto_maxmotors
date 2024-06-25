@@ -32,7 +32,7 @@ use App\Library\Formulario;
                 <div class="login_form_inner">
                     <h3>Entre com seu Login</h3>
 
-                    <form method="POST" class="row login_form" action="<?= baseUrl() ?>Login/signIn" id="contactForm">
+                    <form method="POST" class="row login_form" action="<?= baseUrl() ?>login/signIn" id="contactForm">
 
                         <div class="col-md-12 form-group mt-3">
                             <input type="email" class="form-control" id="email" name="email" placeholder="E-mail" onfocus="this.placeholder = ''" onblur="this.placeholder = 'E-mail'" required autofocus>
@@ -57,7 +57,7 @@ use App\Library\Formulario;
                         <div class="col-12 mt-3">
                             <?= Formulario::exibeMsgSucesso() ?>
                         </div>
-                        
+
                         <div class="col-12 form-group mt-3">
                             <button type="submit" value="submit" class="btn btn-outline-secondary">Entrar</button>
                             <a href="<?= baseUrl() ?>Login/solicitaRecuperacaoSenha">Esqueceu a senha?</a>

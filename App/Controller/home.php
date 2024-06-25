@@ -42,7 +42,7 @@ class Home extends ControllerMain
             ],
         ];
 
-        $this->loadView("home", ['menu' => $menu], false);
+        $this->loadView("home", ['menu' => $menu]);
     }
 
     /**

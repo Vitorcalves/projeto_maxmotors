@@ -20,15 +20,18 @@ use App\Library\Session;
     <div class="col-md-4">
       <comp-select></comp-select>
     </div>
-    <div class="col-md-4">
-      <comp-password></comp-password>
-    </div>
-    <div class="col-md-4">
-      <p>Sua senha deve ter pelo menos 8 caracteres,</p>
-      <p>incluir letras maiúsculas,</p>
-      <p>incluir letras minúsculas,</p>
-      <p>números e caracteres especiais.</p>
-    </div>
+    <?php if ($this->getAcao() != 'update') : ?>
+
+      <div class="col-md-4">
+        <comp-password></comp-password>
+      </div>
+      <div class="col-md-4">
+        <p>Sua senha deve ter pelo menos 8 caracteres,</p>
+        <p>incluir letras maiúsculas,</p>
+        <p>incluir letras minúsculas,</p>
+        <p>números e caracteres especiais.</p>
+      </div>
+    <?php endif; ?>
     <div class="col-12">
       <button id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
     </div>
@@ -37,30 +40,37 @@ use App\Library\Session;
 
 <script>
   const data = <?php echo json_encode($dados); ?>;
+  var id = null;
+  const validations = [{
+      field: 'nome',
+      type: 'required'
+    },
+    {
+      field: 'email',
+      type: 'email'
+    },
+    {
+      field: 'Nivel',
+      type: 'notZero'
+    },
+    {
+      field: 'password',
+      type: 'password',
+      extra: 'confirm_password'
+    },
+  ];
+  if (data.usuario) {
+    validations.pop();
+    id = data.usuario.id;
+  }
+
 
 
   document.getElementById('btnCadastrar').addEventListener('click', function(e) {
     e.preventDefault();
 
     const form = document.getElementById('formCadastro');
-    const validations = [{
-        field: 'nome',
-        type: 'required'
-      },
-      {
-        field: 'email',
-        type: 'email'
-      },
-      {
-        field: 'password',
-        type: 'password',
-        extra: 'confirm_password'
-      },
-      {
-        field: 'Nivel',
-        type: 'notZero'
-      }
-    ];
+
 
     const formIsValid = validation.validar(form, validations);
 
@@ -74,10 +84,13 @@ use App\Library\Session;
     formData.forEach(function(value, key) {
       object[key] = value;
     });
+    if (id) {
+      object.id = id;
+    }
     var json = JSON.stringify(object);
 
     // // Enviar os dados
-    fetch('<?= baseUrl() ?>usuario/insert/', {
+    fetch('<?= baseUrl() ?>usuario/<?= $this->getAcao() ?>', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -95,7 +108,7 @@ use App\Library\Session;
       .then(data => {
         console.log('Sucesso:', data);
         funcoes.showToast('Cadastro realizado com sucesso!', 'success');
-        window.location.href = '<?= baseUrl() ?>usuario/';
+        window.location.href = '<?= baseUrl() ?>usuario';
       })
       .catch((error) => {
         console.error('Erro:', error);

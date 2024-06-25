@@ -54,47 +54,6 @@ class Cliente extends ControllerMain
     $this->loadView("usuario/listaformulario", ['menu' => $menu, 'clientes' => $clientes]);
   }
 
-  // public function edit()
-  // {
-  //     $enderecoModel = $this->loadModel("Endereco");
-  //     $estados = $enderecoModel->getEstados();
-  //     $usuario = $this->model->getCliente($getId);
-
-  //     $menu = [
-  //         [
-  //             'nome' => 'Home',
-  //             'url' => "#",
-  //             'ativo' => false
-  //         ],
-  //         [
-  //             'nome' => 'Carros',
-  //             'url' => "#",
-  //             'ativo' => false
-  //         ],
-  //         [
-  //             'nome' => 'Venda',
-  //             'url' => "#",
-  //             'ativo' => false
-  //         ],
-  //         [
-  //             'nome' => 'Clientes',
-  //             'url' => "#",
-  //             'ativo' => false
-  //         ],
-  //         [
-  //             'nome' => 'Usuários',
-  //             'url' => "#",
-  //             'ativo' => true
-  //         ],
-  //     ];
-
-
-
-
-
-
-  //     $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados, 'usuario' => $usuario], false);
-  // }
 
   /**
    * lista

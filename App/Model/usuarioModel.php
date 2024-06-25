@@ -16,14 +16,6 @@ class UsuarioModel extends ModelMain
             "label" => 'E-mail',
             "rules" => 'required|email|max:100'
         ],
-        // "nivel"  => [
-        //     "label" => 'Nível',
-        //     "rules" => 'required|integer'
-        // ],
-        // "statusRegistro"  => [
-        //     "label" => 'Status',
-        //     "rules" => 'required|integer'
-        // ]
     ];
 
 
@@ -138,30 +130,6 @@ class UsuarioModel extends ModelMain
         return 0;
     }
 
-    public function buscaCep($cep)
-    {
-        $rsc = $this->db->dbSelect("
-            SELECT 
-                c.logradouro, 
-                c.bairro, 
-                m.nome AS nome_municipio, 
-                e.nome AS nome_estado 
-            FROM 
-                cep AS c
-            INNER JOIN 
-                municipios AS m ON m.idMunicipio = c.idMunicipio
-            INNER JOIN 
-                estados AS e ON e.idEstado = m.idEstado
-            WHERE 
-                c.cep = ?", [$cep]);
-
-        if ($this->db->dbNumeroLinhas($rsc) > 0) {
-            return $this->db->dbBuscaArrayAll($rsc[0]);
-        } else {
-            return [];
-        }
-    }
-
     public function getUsuario($id)
     {
         $sql = "SELECT 
@@ -202,69 +170,5 @@ class UsuarioModel extends ModelMain
             error_log($e);
             throw $e;
         }
-    }
-
-    public function criarCliente($data)
-    {
-        $this->db->beginTransaction();
-
-        try {
-
-            if ($data['tipo'] == 1) {
-                if (!$this->inserirFisica($data)) {
-                    throw new Exception('Erro ao inserir pessoa física');
-                }
-            } else {
-                if (!$this->inserirJuridica($data)) {
-                    throw new Exception('Erro ao inserir pessoa jurídica');
-                }
-            }
-
-            if (!$this->inserirEndereco($data)) {
-                throw new Exception('Erro ao inserir endereço');
-            }
-
-            $this->db->commit();
-            return true;
-        } catch (Exception $e) {
-
-            $this->db->rollBack();
-            error_log($e);
-            throw $e;
-        }
-    }
-
-    private function inserirFisica($data)
-    {
-        return $this->db->insertTransactional('fisica', [
-            "id" => $data['id'],
-            "email" => $data['email'],
-            "nome" => $data['nome'],
-            "cpf" => $data['cpf'],
-        ]);
-    }
-
-    private function inserirJuridica($data)
-    {
-        return $this->db->insertTransactional('juridica', [
-            "id" => $data['id'],
-            "email" => $data['email'],
-            "nome" => $data['nome'],
-            "cnpj" => $data['cnpj'],
-        ]);
-    }
-
-    private function inserirEndereco($data)
-    {
-        return $this->db->insertTransactional('endereco', [
-            "cep" => $data['cep'],
-            "logradouro" => $data['logradouro'],
-            "numero" => $data['numero_casa'],
-            "complemento" => $data['complemento'],
-            "municipio" => $data['Cidades'],
-            "estado" => $data['Estados'],
-            "bairro" => $data['bairro'],
-            "idPessoa" => $data['id']
-        ]);
     }
 }

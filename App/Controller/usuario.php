@@ -50,93 +50,6 @@ class Usuario extends ControllerMain
         $this->loadView("usuario/listUser", ['menu' => $menu, 'usuarios' => $usuarios]);
     }
 
-    // public function edit()
-    // {
-    //     $enderecoModel = $this->loadModel("Endereco");
-    //     $estados = $enderecoModel->getEstados();
-    //     $usuario = $this->model->getCliente($getId);
-
-    //     $menu = [
-    //         [
-    //             'nome' => 'Home',
-    //             'url' => "#",
-    //             'ativo' => false
-    //         ],
-    //         [
-    //             'nome' => 'Carros',
-    //             'url' => "#",
-    //             'ativo' => false
-    //         ],
-    //         [
-    //             'nome' => 'Venda',
-    //             'url' => "#",
-    //             'ativo' => false
-    //         ],
-    //         [
-    //             'nome' => 'Clientes',
-    //             'url' => "#",
-    //             'ativo' => false
-    //         ],
-    //         [
-    //             'nome' => 'Usuários',
-    //             'url' => "#",
-    //             'ativo' => true
-    //         ],
-    //     ];
-
-
-
-
-
-
-    //     $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados, 'usuario' => $usuario], false);
-    // }
-
-    /**
-     * lista
-     *
-     * @return void
-     */
-    public function buscar()
-    {
-        try {
-
-            $cep = $this->recebeJson();
-            $enderecoModel = $this->loadModel("Endereco");
-
-            $dadosBusca = $enderecoModel->buscaCep($cep);
-
-            if ($dadosBusca) {
-                return $this->toJson($dadosBusca);
-            } else {
-                return $this->toJson(['error' => 'Endereço não encontrado para o CEP fornecido'], 404);
-            }
-        } catch (\Throwable $th) {
-            return $this->toJson($th, 400);
-        }
-    }
-
-    /**
-     * cidades
-     *
-     * @return void
-     */
-    public function cidades()
-    {
-        $idEstado = $this->getGet();
-        try {
-            // var_dump($idEstado);
-            $idEstado = explode("/", $idEstado["parametros"])[2];
-            $enderecoModel = $this->loadModel("Endereco");
-            $municipios = $enderecoModel->getMunicipios($idEstado);
-        } catch (\Throwable $th) {
-            return $this->toJson(['error' => 'Estado não fornecido'], 400);
-        }
-
-        return $this->toJson($municipios);
-    }
-
-
     /**
      * form
      *
@@ -208,22 +121,17 @@ class Usuario extends ControllerMain
      */
     public function update()
     {
-        $post = $this->getPost();
-
-        // Valida dados recebidos do formulário
+        $post = $this->recebeJson();
         if (Validator::make($post, $this->model->validationRules)) {
-            return Redirect::page("Usuario/form/update");
+            return Redirect::page("usuario/form/update");
         } else {
 
             if ($this->model->update(['id' => $post['id']], [
-                "nome"              => $post['nome'],
-                "statusRegistro"    => $post['statusRegistro'],
-                "nivel"             => $post['nivel'],
-                "email"             => $post['email']
+                "nome" => $post['nome'],
+                "nivel" => $post['Nivel'],
+                "email" => $post['email']
             ])) {
-                return Redirect::page("Usuario", ["msgSuccess" => "Usuário alterado com sucesso !"]);
-            } else {
-                return Redirect::page("Usuario", ["msgError" => "Falha na alteração dos dados do Usuário !"]);
+                return $this->toJson(['msgSuccess' => 'Usuário atualizado com sucesso !'], 200);
             }
         }
     }

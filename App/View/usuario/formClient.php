@@ -154,7 +154,7 @@ use App\Library\Session;
     var json = JSON.stringify(object);
 
     // // Enviar os dados
-    fetch('<?= baseUrl() ?>cliente/insert', {
+    fetch('<?= baseUrl() ?>cliente/<?= $this->getAcao() ?>', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
