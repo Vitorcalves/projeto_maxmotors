@@ -29,7 +29,7 @@ class Login extends ControllerMain
 
             // validar a senha            
             if (!password_verify(trim($post["senha"]), $aUsuario['pasword'])) {
-                Session::set("msgError", 'Usuário e ou senha inválido11.');
+                Session::set("msgError", 'Usuário e ou senha inválido.');
                 return Redirect::page("home/login");
             }
 
@@ -54,7 +54,7 @@ class Login extends ControllerMain
 
         } else {
 
-            Session::set('msgError', 'Usuário e ou senha inválido22.');
+            Session::set('msgError', 'Usuário e ou senha inválido.');
             return Redirect::page("home/login");
         }
     }

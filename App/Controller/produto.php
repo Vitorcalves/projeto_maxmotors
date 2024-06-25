@@ -30,8 +30,7 @@ class Produto extends ControllerMain
      */
     public function index()
     {
-        $produtoModel =  $this->loadModel("produto");
-        $marca = $produtoModel->getMarcaCombobox();
+        $marca = $this->model->getMarcaCombobox();
 
         $menu = [
             [
@@ -61,7 +60,7 @@ class Produto extends ControllerMain
             ],
         ];
 
-        $this->loadView("restrita/formProduto", ['menu' => $menu, 'marca' => $marca], false);
+        $this->loadView("carro/creat", ['menu' => $menu, 'marca' => $marca]);
     }
 
     /**
