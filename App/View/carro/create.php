@@ -4,6 +4,7 @@ use App\Library\Session;
 use App\Library\Formulario;
 
 ?>
+<script src="<?= baseUrl() ?>assets/ckeditor5/ckeditor.js"></script>
 
 <main class="flex-shrink-0">
   <div class="container">
@@ -34,18 +35,18 @@ use App\Library\Formulario;
         <label for="quantidade" class="form-label">Quantidade</label>
         <input type="text" class="form-control" id="quantidade" name="quantidade">
       </div>
-      <div class="col-md-2">
-        <label for="descricao" class="form-label">Descrição</label>
-        <textarea></textarea>
-        <!-- <input type="text" class="form-control" id="descricao" name="descricao"> -->
+      <div class="mb-3 col-6">
+        <label for="descricao" class="form-label">Características</label>
+        <textarea class="form-control" name="descricao" id="descricao"><?= setValor('descricao') ?></textarea>
       </div>
-      <div class="col-md-4">
-        <label for="imagem" class="form-label">Selecione uma imagem</label>
-        <input type="file" class="form-control" id="imagem">
+      <div class="col-6 mb-3">
+        <label for="anexos" class="form-label">Imagem</label>
+        <input class="form-control" type="file" id="imagem" name="imagem">
       </div>
       <div class="col-12">
         <button type="submit" class="btn btn-secondary">Gravar</button>
       </div>
+
     </form>
   </div>
 </main>
@@ -53,6 +54,12 @@ use App\Library\Formulario;
 
 <script>
   const data = <?php echo json_encode($dados); ?>;
+
+  ClassicEditor
+    .create(document.querySelector('#descricao'))
+    .catch(error => {
+      console.error(error);
+    });
 
   VMasker(document.querySelector("#ano")).maskPattern("9999");
 
@@ -63,7 +70,7 @@ use App\Library\Formulario;
       name: "Marca",
       options: data.marca,
       idField: 'id',
-      textField: 'marca',
+      textField: 'nome',
       extra: {
         id: 0,
         name: 'Selecione uma marca'

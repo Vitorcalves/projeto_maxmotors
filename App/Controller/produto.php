@@ -60,7 +60,7 @@ class Produto extends ControllerMain
             ],
         ];
 
-        $this->loadView("carro/creat", ['menu' => $menu, 'marca' => $marca]);
+        $this->loadView("carro/create", ['menu' => $menu, 'marca' => $marca]);
     }
 
     /**
