@@ -23,6 +23,7 @@ use App\Library\Session;
     <script src="<?= baseUrl() ?>assets/bootstrap/js/bootstrap.js"></script>
     <script src="<?= baseUrl() ?>componentes/componentes.js" defer></script>
     <script src="<?= baseUrl() ?>componentes/funcoes.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <title>Max Motors</title>
 </head>
 

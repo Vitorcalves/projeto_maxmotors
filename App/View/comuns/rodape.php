@@ -10,14 +10,14 @@
 
         </body>
         <script>
-            const data = <?php echo json_encode($dados); ?>;
             document.addEventListener("DOMContentLoaded", () => {
                 const cabecario = document.querySelector("cabecario-pagina");
-                console.log(<?php echo json_encode($dados['menu']); ?>);
+                console.log(<?php echo json_encode(isset($dados['menu']) ? $dados['menu'] : []); ?>);
                 cabecario.menus = <?php
                                     echo json_encode(isset($dados['menu']) ? $dados['menu'] : []);
                                     ?>;
             });
+            console.log(<?php echo json_encode($dados); ?>);
         </script>
 
         </html>

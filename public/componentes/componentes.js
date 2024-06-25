@@ -279,8 +279,77 @@ class CompToast extends HTMLElement {
     }
 }
 
+class CompPassword extends HTMLElement {
+    constructor() {
+        super();
+        this.render();
+    }
+
+    connectedCallback() {
+        this.addEventListener('input', this.onInput);
+        const checkboxes = this.querySelectorAll('.form-check-input');
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', (e) => this.togglePasswordVisibility(e, index));
+        });
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('input', this.onInput);
+        const checkboxes = this.querySelectorAll('.form-check-input');
+        checkboxes.forEach((checkbox) => {
+            checkbox.removeEventListener('change', (e) => this.togglePasswordVisibility(e));
+        });
+    }
+
+    onInput() {
+        const password = this.querySelector('#password').value;
+        const confirmPassword = this.querySelector('#confirm_password').value;
+        const message = this.querySelector('.message');
+        if (password !== confirmPassword) {
+            message.textContent = 'As senhas não coincidem.';
+            message.style.color = 'red';
+        } else {
+            message.textContent = 'As senhas coincidem.';
+            message.style.color = 'green';
+        }
+    }
+
+    togglePasswordVisibility(e, index) {
+        // Determine which password input to toggle based on the checkbox index
+        const input = index === 0 ? this.querySelector('#password') : this.querySelector('#confirm_password');
+        const type = e.target.checked ? 'text' : 'password';
+        input.type = type;
+    }
+
+    render() {
+        this.innerHTML = `
+            <div class="password-container">
+                <label for="password" class="form-label">Senha</label>
+                <div class="input-group mb-3">
+                  <input type="password" name="password" class="form-control" id="password" required>
+                  <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
+                    <label class="form-label"></label>
+                  </div>
+                </div>
+                <label for="confirm_password" class="form-label">Confirmação de Senha</label>
+                <div class="input-group mb-3">
+                  <input type="password" name="confirm_password" class="form-control" id="confirm_password" required>
+                  <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
+                    <label class="form-label"></label>
+                  </div>
+                </div>
+                <div class="message"></div>
+            </div>
+        `;
+    }
+}
+
+
 customElements.define('cabecario-pagina', CabecarioPagina);
 customElements.define('rodape-pagina', RodapePagina);
 customElements.define('theme-toggle', ThemeToggle);
 customElements.define('comp-select', CompSelect);
 customElements.define('comp-toast', CompToast);
+customElements.define('comp-password', CompPassword);

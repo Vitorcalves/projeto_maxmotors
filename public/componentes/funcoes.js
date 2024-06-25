@@ -4,7 +4,7 @@ class validation {
     let isValid = true;
   
     validations.forEach(validation => {
-      const { field, type } = validation;
+      const { field, type, extra = null } = validation;
       const input = form.elements[field];
   
       if (!input) {
@@ -59,6 +59,18 @@ class validation {
         case 'notZero':
           if (input.value === '0') {
             this.invalidFeedback(input, 'Deve ser diferente de zero!');
+            isValid = false;
+            return;
+          }
+          break;
+        case 'password':
+          if (!this.validatePassword(input.value)) {
+            this.invalidFeedback(input, 'Deve conter ao menos 8 caracteres, uma letra maiúscula, uma letra minúscula e um número!');
+            isValid = false;
+            return;
+          }
+          if (extra && input.value !== form.elements[extra].value) {
+            this.invalidFeedback(input, 'Senhas não conferem!');
             isValid = false;
             return;
           }
@@ -147,6 +159,10 @@ class validation {
     const calculatedSecondDigit = calculateDigit(cnpjBase + calculatedFirstDigit, 2);
 
     return calculatedFirstDigit === Number(cnpjDigits[0]) && calculatedSecondDigit === Number(cnpjDigits[1]);
+  }
+
+  static validatePassword(password) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d\S]{8,}$/.test(password);
   }
 }
 

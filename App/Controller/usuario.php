@@ -18,7 +18,7 @@ class Usuario extends ControllerMain
         // if (!$this->getAdministrador()) {
         //     return Redirect::page("Home");
         // }
-
+        $usuarios = $this->model->getLista();
         $menu = [
             [
                 'nome' => 'Home',
@@ -47,7 +47,7 @@ class Usuario extends ControllerMain
             ],
         ];
 
-        $this->loadView("usuario/formClient", ['menu' => $menu], false);
+        $this->loadView("usuario/listUser", ['menu' => $menu, 'usuarios' => $usuarios]);
     }
 
     // public function edit()
@@ -144,10 +144,8 @@ class Usuario extends ControllerMain
      */
     public function form()
     {
-        $enderecoModel = $this->loadModel("Endereco");
-        $estados = $enderecoModel->getEstados();
+        $nivel = $this->model->getNivel();
         $usuario = null;
-        $municipios = null;
         $menu = [
             [
                 'nome' => 'Home',
@@ -181,10 +179,9 @@ class Usuario extends ControllerMain
         if ($this->getAcao() != 'new') {
             // buscar o usuário pelo $id no banco de dados
             $getId = $this->getId();
-            $usuario = $this->model->getCliente($getId);
-            $municipios = $enderecoModel->getMunicipios($usuario['estado']);
+            $usuario = $this->model->getById($getId);
         }
-        $this->loadView("usuario/formClient", ['menu' => $menu, 'estados' => $estados, 'usuario' => $usuario, 'dados_municipio' => $municipios], false);
+        $this->loadView("usuario/formUser", ['menu' => $menu, 'nivel' => $nivel, 'usuario' => $usuario]);
     }
 
     /**
@@ -196,11 +193,10 @@ class Usuario extends ControllerMain
     {
         try {
             $post = $this->recebeJson();
-
-            // Valida dados recebidos do formulário
-            return $this->model->criarCliente($post);
+            $return = $this->model->criatUsuario($post);
+            return $this->toJson($return, 200);
         } catch (\Throwable $th) {
-            return $this->toJson($th, 400);
+            return $this->toJson(['error' => $th->getMessage()], 400);
         }
     }
 

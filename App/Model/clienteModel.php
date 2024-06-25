@@ -188,9 +188,13 @@ class ClienteModel extends ModelMain
 
   public function criarCliente($data)
   {
+    if ($this->buscarEmail($data['email'], 'cliente')) {
+      throw new Exception('E-mail já cadastrado');
+    }
     $this->db->beginTransaction();
 
     try {
+
 
       if ($data['tipo'] == 1) {
         if (!$this->inserirFisica($data)) {
@@ -206,7 +210,7 @@ class ClienteModel extends ModelMain
       }
 
       $this->db->commit();
-      return true;
+      return ['status' => 'success', 'message' => 'Cliente cadastrado com sucesso'];
     } catch (Exception $e) {
       $this->db->rollBack();
       error_log($e);
@@ -240,7 +244,7 @@ class ClienteModel extends ModelMain
       "cep" => $data['cep'],
       "logradouro" => $data['logradouro'],
       "numero" => $data['numero_casa'],
-      "complemento" => $data['complemento'],
+      "complemento" => $data['complemento'] ?? '',
       "municipio" => $data['Cidades'],
       "estado" => $data['Estados'],
       "bairro" => $data['bairro'],

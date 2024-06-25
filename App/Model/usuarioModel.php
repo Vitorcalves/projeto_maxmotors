@@ -8,8 +8,6 @@ class UsuarioModel extends ModelMain
     public $table = "user";
 
     public $validationRules = [
-        "idPessoa" => [],
-
         "nome"  => [
             "label" => 'Nome',
             "rules" => 'required|min:3|max:50'
@@ -18,40 +16,6 @@ class UsuarioModel extends ModelMain
             "label" => 'E-mail',
             "rules" => 'required|email|max:100'
         ],
-        "bairro"  => [
-            "label" => 'Bairro',
-            "rules" => 'required|min:3|max:50'
-        ],
-        "cep"  => [
-            "label" => 'CEP',
-            "rules" => 'required'
-        ],
-        "logradouro"  => [
-            "label" => 'Logradouro',
-            "rules" => 'required|min:3|max:100'
-        ],
-        "numero_casa"  => [
-            "label" => 'Número',
-            "rules" => 'required|min:1|max:10'
-        ],
-        "telefone"  => [
-            "label" => 'Telefone',
-            "rules" => 'required'
-        ],
-        "tipo"  => [
-            "label" => 'Tipo',
-            "rules" => 'required|integer'
-        ],
-        "Estados"  => [
-            "label" => 'Estado',
-            "rules" => 'required|integer'
-        ],
-        "Cidades"  => [
-            "label" => 'Cidade',
-            "rules" => 'required|integer'
-        ]
-
-
         // "nivel"  => [
         //     "label" => 'Nível',
         //     "rules" => 'required|integer'
@@ -70,7 +34,52 @@ class UsuarioModel extends ModelMain
      */
     public function getLista()
     {
-        return $this->db->select($this->table, "all", ["orderby", ["nome"]]);
+        $rsc = $this->db->dbSelect("
+            SELECT 
+                u.id,
+                u.nome,
+                u.email,
+                u.nivel AS id_nivel,
+                n.nome AS nome_nivel
+            FROM 
+                user AS u
+            INNER JOIN 
+                nivel AS n ON n.id = u.nivel
+            where 
+                u.deleted IS NULL
+            ORDER BY
+                u.nome
+        ");
+
+        if ($this->db->dbNumeroLinhas($rsc) > 0) {
+            return $this->db->dbBuscaArrayAll($rsc);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * getNiveis
+     *
+     * @return void
+     */
+    public function getNivel()
+    {
+        $rsc = $this->db->dbSelect("
+            SELECT 
+                id,
+                nome
+            FROM 
+                nivel
+            ORDER BY
+                nome
+        ");
+
+        if ($this->db->dbNumeroLinhas($rsc) > 0) {
+            return $this->db->dbBuscaArrayAll($rsc);
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -153,27 +162,15 @@ class UsuarioModel extends ModelMain
         }
     }
 
-    public function getCliente($id)
+    public function getUsuario($id)
     {
         $sql = "SELECT 
-                    u.id, 
-                    u.email, 
-                    u.cpf, 
-                    u.nome, 
-                    u.cnpj, 
-                    e.cep, 
-                    e.logradouro, 
-                    e.numero, 
-                    e.complemento, 
-                    e.municipio, 
-                    e.estado, 
-                    e.bairro 
+                    *
                 FROM 
-                    user AS u
-                LEFT JOIN 
-                    endereco AS e ON e.idPessoa = u.id
+                    user
                 WHERE 
-                    p.id = ?";
+                    id = ?
+                LIMIT 1";
 
         $rs = $this->db->dbSelect($sql, [$id]);
 
@@ -181,6 +178,29 @@ class UsuarioModel extends ModelMain
             return $this->db->dbBuscaArrayAll($rs)[0];
         } else {
             return null;
+        }
+    }
+
+    public function criatUsuario($data)
+    {
+        try {
+            if ($this->buscarEmail($data['email'], 'user')) {
+                throw new Exception('E-mail já cadastrado');
+            }
+
+            if ($this->insert([
+                "nivel"             => $data['Nivel'],
+                "nome"              => $data['nome'],
+                "email"             => $data['email'],
+                "pasword"             => password_hash($data['password'], PASSWORD_DEFAULT)
+            ])) {
+                return true;
+            } else {
+                throw new Exception('Erro ao inserir usuário');
+            }
+        } catch (Exception $e) {
+            error_log($e);
+            throw $e;
         }
     }
 

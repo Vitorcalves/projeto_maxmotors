@@ -60,6 +60,10 @@ use App\Library\Session;
       <input type="text" value="<?= setSubValor(['usuario', 'logradouro']) ?>" class=" form-control" name="logradouro" id="logradouro">
     </div>
     <div class="col-md-2">
+      <label for="complemento" class="form-label">Complemento</label>
+      <input type="text" value="<?= setSubValor(['usuario', 'complemento']) ?>" class=" form-control" name="complemento" id="complemento">
+    </div>
+    <div class="col-md-2">
       <label for="numero" class="form-label">Número da Casa</label>
       <input type="text" value="<?= setSubValor(['usuario', 'numero']) ?>" class=" form-control" name="numero_casa" id="numero">
     </div>
@@ -157,14 +161,22 @@ use App\Library\Session;
         },
         body: json
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            throw new Error(data.error || 'Erro desconhecido');
+          });
+        }
+        return response.json();
+      })
       .then(data => {
         console.log('Sucesso:', data);
         funcoes.showToast('Cadastro realizado com sucesso!', 'success');
+        window.location.href = '<?= baseUrl() ?>cliente';
       })
       .catch((error) => {
         console.error('Erro:', error);
-        funcoes.showToast('Erro no cadastro!', 'danger');
+        funcoes.showToast(error.message, 'danger');
       });
   });
 

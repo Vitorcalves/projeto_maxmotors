@@ -1,9 +1,11 @@
 <?php
 
 use App\Library\Formulario;
-use App\Library\Session;
 
 ?>
+
+<script type="text/javascript" src="<?= baseUrl() ?>assets/DataTables/datatables.min.js"></script>
+
 <?= Formulario::titulo("Usuários") ?>
 
 <table id="tbListaUsuario" class="table table-hover table-bordered table-striped table-sm">
@@ -11,18 +13,16 @@ use App\Library\Session;
     <tr class="text-weigth-bold">
       <th>Nome</th>
       <th>E-mail</th>
-      <th>CPF</th>
-      <th>CNPJ</th>
+      <th>Nivel</th>
       <th>Opções</th>
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($dados['clientes'] as $value) : ?>
+    <?php foreach ($dados['usuarios'] as $value) : ?>
       <tr>
         <td><?= $value['nome'] ?></td>
         <td><?= $value['email'] ?></td>
-        <td><?= isset($value['cpf']) ? $value['cpf'] : ''  ?></td>
-        <td><?= isset($value['cnpj']) ? $value['cnpj'] : '' ?></td>
+        <td><?= $value['nome_nivel'] ?></td>
         <td>
           <?= Formulario::botao("update", $value['id']) ?>
           <?= Formulario::botao("delete", $value['id']) ?>
@@ -31,9 +31,5 @@ use App\Library\Session;
     <?php endforeach; ?>
   </tbody>
 </table>
-</body>
-
 
 <?= Formulario::getDataTables("tbListaUsuario") ?>
-
-</html>

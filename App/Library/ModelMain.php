@@ -112,4 +112,9 @@ class ModelMain
             $valor
         );
     }
+
+    public function buscarEmail($email, $table = 'cliente')
+    {
+        return $this->db->select($table, 'first', ['where' => ['email' => $email]]);
+    }
 }

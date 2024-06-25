@@ -203,10 +203,12 @@ class Cliente extends ControllerMain
     try {
       $post = $this->recebeJson();
 
-      // Valida dados recebidos do formulário
-      return $this->model->criarCliente($post);
+      $retorno = $this->model->criarCliente($post);
+
+      return $this->toJson($retorno, 200);
     } catch (\Throwable $th) {
-      return $this->toJson($th, 400);
+      error_log($th->getMessage());  // Loga o erro para análise posterior
+      return $this->toJson(['error' => $th->getMessage()], 400);
     }
   }
 
