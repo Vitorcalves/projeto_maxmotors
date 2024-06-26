@@ -11,7 +11,6 @@ echo Formulario::titulo('Categorias');
         <tr>
             <th>Id</th>
             <th>Descrição</th>
-            <th>Status</th>
             <th>Opções</th>
         </tr>
     </thead>
@@ -19,8 +18,7 @@ echo Formulario::titulo('Categorias');
         <?php foreach ($aDados as $value) : ?>
             <tr>
                 <td><?= $value['id'] ?></td>
-                <td><?= $value['descricao'] ?></td>
-                <td><?= getStatus($value['statusRegistro']) ?></td>
+                <td><?= $value['nome'] ?></td>
                 <td>
                     <?= Formulario::botao("view", $value['id']) ?>
                     <?= Formulario::botao("update", $value['id']) ?>

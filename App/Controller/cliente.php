@@ -24,12 +24,12 @@ class Cliente extends ControllerMain
     $menu = [
       [
         'nome' => 'Home',
-        'url' => "#",
+        'url' => baseurl(). "home",
         'ativo' => false
       ],
       [
         'nome' => 'Carros',
-        'url' => "#",
+        'url' => baseUrl(). "produto",
         'ativo' => false
       ],
       [
@@ -39,13 +39,13 @@ class Cliente extends ControllerMain
       ],
       [
         'nome' => 'Clientes',
-        'url' => "#",
-        'ativo' => false
+        'url' => baseUrl(). "cliente",
+        'ativo' => true
       ],
       [
         'nome' => 'Usuários',
-        'url' => "#",
-        'ativo' => true
+        'url' => baseUrl(). "Usuario",
+        'ativo' => false
       ],
     ];
 

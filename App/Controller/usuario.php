@@ -61,31 +61,31 @@ class Usuario extends ControllerMain
         $usuario = null;
         $menu = [
             [
-                'nome' => 'Home',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Home',
+              'url' => baseurl(). "home",
+              'ativo' => false
             ],
             [
-                'nome' => 'Carros',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Carros',
+              'url' => baseUrl(). "produto",
+              'ativo' => false
             ],
             [
-                'nome' => 'Venda',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Venda',
+              'url' => "#",
+              'ativo' => false
             ],
             [
-                'nome' => 'Clientes',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Clientes',
+              'url' => baseUrl(). "cliente",
+              'ativo' => false
             ],
             [
-                'nome' => 'Usuários',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Usuários',
+              'url' => baseUrl(). "Usuario",
+              'ativo' => true
             ],
-        ];
+          ];
 
 
 

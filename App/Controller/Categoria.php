@@ -17,9 +17,9 @@ class Categoria extends ControllerMain
         $this->auxiliarConstruct($dados);
 
         // Somente pode ser acessado por usuários adminsitradores
-        if (!$this->getAdministrador()) {
-            return Redirect::page("Home");
-        }
+        // if (!$this->getAdministrador()) {
+        //     return Redirect::page("Home");
+        // }
     }
 
     /**
@@ -29,7 +29,36 @@ class Categoria extends ControllerMain
      */
     public function index()
     {
-        $this->loadView("restrita/listaCategoria", $this->model->lista("descricao"));
+
+        $menu = [
+            [
+              'nome' => 'Home',
+              'url' => baseurl(). "home",
+              'ativo' => false
+            ],
+            [
+              'nome' => 'Carros',
+              'url' => baseUrl(). "produto",
+              'ativo' => false
+            ],
+            [
+              'nome' => 'Venda',
+              'url' => "#",
+              'ativo' => false
+            ],
+            [
+              'nome' => 'Clientes',
+              'url' => baseUrl(). "cliente",
+              'ativo' => true
+            ],
+            [
+              'nome' => 'Usuários',
+              'url' => baseUrl(). "Usuario",
+              'ativo' => false
+            ],
+          ];
+
+        $this->loadView("restrita/listaCategoria", ['menu' => $menu], $this->model->lista("nome"));
     }
 
     /**
@@ -61,9 +90,9 @@ class Categoria extends ControllerMain
             return Redirect::page("Categoria/form/insert");     // error
         } else {
 
+
             if ($this->model->insert([
-                "descricao" => $post['descricao'],
-                "statusRegistro" => $post['statusRegistro']
+                "nome" => $post['nome'],
             ])) {
                 Session::set("msgSuccess", "Categoria adicionada com sucesso.");
             } else {
@@ -93,8 +122,7 @@ class Categoria extends ControllerMain
                     "id" => $post['id']
                 ], 
                 [
-                    "descricao" => $post['descricao'],
-                    "statusRegistro" => $post['statusRegistro']
+                    "nome" => $post['nome'],
                 ]
             )) {
                 Session::set("msgSuccess", "Categoria alterada com sucesso.");

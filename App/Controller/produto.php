@@ -34,31 +34,31 @@ class Produto extends ControllerMain
 
         $menu = [
             [
-                'nome' => 'Home',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Home',
+              'url' => baseurl(). "home",
+              'ativo' => false
             ],
             [
-                'nome' => 'Carros',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Carros',
+              'url' => baseUrl(). "produto",
+              'ativo' => true
             ],
             [
-                'nome' => 'Venda',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Venda',
+              'url' => "#",
+              'ativo' => false
             ],
             [
-                'nome' => 'Clientes',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Clientes',
+              'url' => baseUrl(). "cliente",
+              'ativo' => false
             ],
             [
-                'nome' => 'Usuários',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Usuários',
+              'url' => baseUrl(). "Usuario",
+              'ativo' => false
             ],
-        ];
+          ];
 
         $this->loadView("carro/create", ['menu' => $menu, 'marca' => $marca]);
     }

@@ -16,31 +16,31 @@ class Home extends ControllerMain
 
         $menu = [
             [
-                'nome' => 'Home',
-                'url' => "#",
-                'ativo' => true
+              'nome' => 'Home',
+              'url' => baseurl(). "home",
+              'ativo' => true
             ],
             [
-                'nome' => 'Carros',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Carros',
+              'url' => baseUrl(). "produto",
+              'ativo' => false
             ],
             [
-                'nome' => 'Venda',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Venda',
+              'url' => "#",
+              'ativo' => false
             ],
             [
-                'nome' => 'Clientes',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Clientes',
+              'url' => baseUrl(). "cliente",
+              'ativo' => false
             ],
             [
-                'nome' => 'Usuários',
-                'url' => "#",
-                'ativo' => false
+              'nome' => 'Usuários',
+              'url' => baseUrl(). "Usuario",
+              'ativo' => false
             ],
-        ];
+          ];
 
         $this->loadView("home", ['menu' => $menu]);
     }

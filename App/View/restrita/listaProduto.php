@@ -10,12 +10,12 @@ echo Formulario::titulo('Produtos');
     <thead>
         <tr>
             <th>Id</th>
+            <th>Nome</th>
             <th>Descrição</th>
-            <th>Categoria</th>
-            <th>Saldo em Estoque</th>
-            <th>Preço de Venda</th>
-            <th>Promoção</th>
-            <th>Status</th>
+            <th>Cor</th>
+            <th>Marca</th>
+            <th>Preco</th>
+            <th>Quantidade</th>
             <th>Opções</th>
         </tr>
     </thead>
@@ -23,12 +23,12 @@ echo Formulario::titulo('Produtos');
         <?php foreach ($aDados as $value) : ?>
             <tr>
                 <td class="text-center"><?= $value['id'] ?></td>
+                <td><?= $value['nome'] ?></td>
                 <td><?= $value['descricao'] ?></td>
-                <td><?= $value['descricaoCategoria'] ?></td>
-                <td class="text-end"><?= formataValor($value['saldoEmEstoque'], 3) ?></td>
-                <td class="text-end"><?= formataValor($value['precoVenda'], 2) ?></td>
-                <td class="text-end"><?= formataValor($value['precoPromocao'], 2) ?></td>
-                <td><?= getStatus($value['statusRegistro']) ?></td>
+                <td class="text-end"><?= $value['cor']?></td>
+                <td class="text-end"><?= $value['marca']?></td>
+                <td class="text-end"><?= formataValor($value['preco'], 2) ?></td>
+                <td class="text-end"><?= formataValor($value['quantidade'], 2) ?></td>
                 <td>
                     <?= Formulario::botao("view", $value['id']) ?>
                     <?= Formulario::botao("update", $value['id']) ?>
