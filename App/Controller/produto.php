@@ -70,20 +70,37 @@ class Produto extends ControllerMain
      */
     public function form()
     {
-        $CategoriaModel = $this->loadModel("Categoria");
+        $marca = $this->model->getMarcaCombobox();
 
-        $DbDados = [];
+        $menu = [
+            [
+                'nome' => 'Home',
+                'url' => "#",
+                'ativo' => true
+            ],
+            [
+                'nome' => 'Carros',
+                'url' => "#",
+                'ativo' => true
+            ],
+            [
+                'nome' => 'Venda',
+                'url' => "#",
+                'ativo' => true
+            ],
+            [
+                'nome' => 'Clientes',
+                'url' => "#",
+                'ativo' => true
+            ],
+            [
+                'nome' => 'Usuários',
+                'url' => "#",
+                'ativo' => true
+            ],
+        ];
 
-        if ($this->getAcao() != 'new') {
-            $DbDados = $this->model->getById($this->getId());
-        }
-
-        $DbDados['aCategoria'] = $CategoriaModel->lista('descricao');
-
-        return $this->loadView(
-            "restrita/formProduto",
-            $DbDados
-        );
+        $this->loadView("carro/create", ['menu' => $menu, 'marca' => $marca]);
     }
 
     /**
@@ -113,15 +130,15 @@ class Produto extends ControllerMain
             } else {
                 $nomeRetornado = $post['imagem'];
             }
+            var_dump($post);
 
             if ($this->model->insert([
                 "modelo"            => $post['modelo'],
                 "descricao"         => $post['descricao'],
                 "cor"               => $post['cor'],
-                "marca"             => $post['id'],
+                "marca"             => $post['Marca'],
                 "preco"             => strNumber($post['preco']),
                 "quantidade"        => strNumber($post['quantidade']),
-                "imagem"            => $nomeRetornado
             ])) {
                 Session::set("msgSuccess", "Produto adicionado com sucesso.");
             } else {

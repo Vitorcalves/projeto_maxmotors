@@ -11,7 +11,7 @@ use App\Library\Formulario;
     <h1 class="mt-5"><strong>Cadastro</strong></h1>
   </div>
   <div class="container">
-    <form class="row g-3">
+    <form method="POST" action="<?= baseUrl() ?>produto/<?= $this->getAcao() ?>" enctype="multipart/form-data">
       <div class="col-md-10">
         <label for="modelo" class="form-label">Modelo</label>
         <input type="text" class="form-control" id="modelo" name="modelo">
@@ -29,7 +29,7 @@ use App\Library\Formulario;
       </div>
       <div class="col-md-4">
         <label for="preco" class="form-label">Preço</label>
-        <input type="text" class="form-control" id="preco">
+        <input type="text" class="form-control" id="preco" name="preco">
       </div>
       <div class="col-md-2">
         <label for="quantidade" class="form-label">Quantidade</label>
@@ -46,7 +46,6 @@ use App\Library\Formulario;
       <div class="col-12">
         <button type="submit" class="btn btn-secondary">Gravar</button>
       </div>
-
     </form>
   </div>
 </main>

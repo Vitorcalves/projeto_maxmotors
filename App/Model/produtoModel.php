@@ -2,7 +2,7 @@
 
 use App\Library\ModelMain;
 
-Class produtoModel extends ModelMain
+class produtoModel extends ModelMain
 {
     public $table = "produto";
 
@@ -14,15 +14,7 @@ Class produtoModel extends ModelMain
         'descricao' => [
             'label' => 'Descrição',
             'rules' => 'required|min:1'
-        // ],
-        // 'categoria_id' => [
-        //     'label' => 'Categoria',
-        //     'rules' => 'required|int'
         ],
-        // 'statusRegistro' => [
-        //     'label' => 'Status',
-        //     'rules' => 'required|int'
-        // ]
     ];
 
     /**
@@ -37,7 +29,8 @@ Class produtoModel extends ModelMain
             "SELECT p.*, c.descricao as descricaoCategoria 
             FROM {$this->table} AS p
             INNER JOIN categoria as c ON c.id = p.categoria_id
-            ORDER BY p.{$orderBy}");
+            ORDER BY p.{$orderBy}"
+        );
 
         if ($this->db->dbNumeroLinhas($rsc) > 0) {
             return $this->db->dbBuscaArrayAll($rsc);
@@ -45,21 +38,23 @@ Class produtoModel extends ModelMain
             return [];
         }
     }
-    
+
     /**
      * getProdutoCombobox
      *
      * @param int $categoria_id 
      * @return array
      */
-    public function getProdutoCombobox($categoria_id) 
+    public function getProdutoCombobox($categoria_id)
     {
-        $rsc = $this->db->dbSelect("SELECT p.id, p.descricao 
+        $rsc = $this->db->dbSelect(
+            "SELECT p.id, p.descricao 
                                     FROM {$this->table} as p
                                     INNER JOIN categoria as c ON c.id = p.categoria_id
                                     WHERE c.id = ?
                                     ORDER BY p.descricao",
-                                    [$categoria_id]);
+            [$categoria_id]
+        );
 
         if ($this->db->dbNumeroLinhas($rsc) > 0) {
             return $this->db->dbBuscaArrayAll($rsc);

@@ -35,5 +35,3 @@ use App\Library\Session;
 
 
 <?= Formulario::getDataTables("tbListaUsuario") ?>
-
-</html>
